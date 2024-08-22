@@ -82,12 +82,11 @@ max:= -999 ;
 codm:= 0;
     while (l <> nil) do begin 
         if (max < l^.dato.pp) then begin 
-			writeln('paso1');
             max := l^.dato.pp;
             codm := l^.dato.codp;
         end;
-    end;
-writeln('paso2');    
+        l:=l^.sig
+    end;   
 maximocod:=codm;    
 end;    
 procedure obtenercodmax (v:vector;vm:vectormax);
@@ -97,7 +96,6 @@ begin
 for i := 1 to 8 do begin
 	if (v[i] <> nil ) then begin
 		vm[i]:=maximocod(v[i]);
-		writeln('paso3');
 		writeln(vm[i]);
 	end;	
 end;    
@@ -115,9 +113,11 @@ begin
             j:=j-1;
         end;
         v[j+1]:=act;
+
     end;
-writeln('MINIMO',v[1]);  
-writeln('MAXIMO',v[8]);        
+for i:= 1 to 8 do begin 
+writeln('MINIMO ',v[1]);  
+writeln('MAXIMO ',v[8]);        
 end;
 var 
 i:integer;
@@ -128,7 +128,6 @@ CARGARPELICULAS(v,vult);
 for i:= 1 to 8 do begin
 	vm[i]:= 0;
 end;	
-writeln('PASO');
 obtenercodmax(v,vm);
 INSERCION(vm);
 end.

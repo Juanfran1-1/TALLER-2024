@@ -55,7 +55,7 @@ if (l=nil) then begin
     end
 else begin
     ult:=l;
-    while (ult<>nil) do begin 
+    while (ult^.sig<>nil) do begin 
         ult:=ult^.sig;
     end;
     ult^.sig:=nue;
@@ -76,21 +76,30 @@ end;
 function maximocod(l:lista):integer;
 var 
 max:real;
+codm:integer;
 begin 
-max:=-999;
-    while (l<>nil) do begin 
-        if (max<l^.dato.pp) then begin  
-            max:=l^.dato.pp;
-            maximocod:=l^.dato.codp;
+max:= -999 ;
+codm:= 0;
+    while (l <> nil) do begin 
+        if (max < l^.dato.pp) then begin 
+			writeln('paso1');
+            max := l^.dato.pp;
+            codm := l^.dato.codp;
         end;
     end;
+writeln('paso2');    
+maximocod:=codm;    
 end;    
 procedure obtenercodmax (v:vector;vm:vectormax);
 var 
 i:integer;
 begin 
-for i := 1 to 8 do begin 
-    vm[i]:=maximocod(v[i]);
+for i := 1 to 8 do begin
+	if (v[i] <> nil ) then begin
+		vm[i]:=maximocod(v[i]);
+		writeln('paso3');
+		writeln(vm[i]);
+	end;	
 end;    
 end;
 procedure INSERCION(var v:vectormax);
@@ -119,6 +128,7 @@ CARGARPELICULAS(v,vult);
 for i:= 1 to 8 do begin
 	vm[i]:= 0;
 end;	
+writeln('PASO');
 obtenercodmax(v,vm);
 INSERCION(vm);
 end.

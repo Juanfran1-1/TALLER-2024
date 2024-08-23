@@ -61,10 +61,11 @@ begin
 		pos:=i;
 		for j:= i+1 to dl do begin 
 			if v[j].cod < v[pos].cod then pos:=j;
-		end;	
+        end;
 		act:=v[pos];
 		v[pos]:=v[i];
 		v[i]:=act;
+			
 	end;
 end;			
 var 

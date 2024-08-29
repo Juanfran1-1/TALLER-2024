@@ -68,21 +68,17 @@ procedure leeralumno(var a:alumno);
 var 
 m:materia;
 ale:integer;
-cant:integer;
 begin 
-    cant:=0;
+    a.finales:=nil;
     ale:=random(100);
     write('INGRESANDO LEJAGO DE ALUMNO: ');a.legajo:=ale;
+    write(a.legajo);
     writeln(' ');
-    write(a.legajo,' ap: ');
     leermateria(m);
-    while((m.codigo <> 0) and (cant <=31))  do begin 
-        cant:=cant+1;
+    while((m.codigo <> 0))  do begin 
         armarlista(a.finales,m);
         leermateria(m);
     end;
-    write(cant);
-    writeln(' ');
 end;
 procedure agregaralarbol(var ar:arbol;a:alumno);
 begin 
@@ -102,28 +98,23 @@ end;
 procedure armararbol(var ar:arbol);
 var 
 a:alumno;
+act:integer;
 begin 
     leeralumno(a);
+    act:=a.legajo;
     while (a.legajo <> 0) do begin 
         agregaralarbol(ar,a);
         leeralumno(a);
+        if (act=a.legajo) then 
+            leeralumno(a)
+        else 
+            act:= a.legajo;               
     end;
 end;
 function impar(x:integer):boolean;
 begin 
 impar:=(x mod 2 = 1);
 end;
-{procedure aprobadas(l:lista;var cantap:integer);
-begin 
-cantap:=0;
-while (l <> nil) do begin 
-    if (l^.dato.nota > 4) then begin 
-        cantap:=cantap+1;
-        writeln(l^.dato.codigo,'------',cantap,'-------------');
-    end;    
-    l:=l^.sig;    
-end;
-end;}
 function calcularpromedio(l:lista):real;
 var 
 aux:integer;
@@ -135,26 +126,38 @@ while (l <> nil) do begin
     aux:=aux+1;
     l:=l^.sig;
 end;
-writeln('aux',aux);
 calcularpromedio:=calcularpromedio/aux;
 end;    
+procedure aprobadas(l:lista;var cantap:integer);
+begin 
+cantap:=0;
+while (l <> nil) do begin 
+    if (l^.dato.nota > 4) then begin 
+        cantap:=cantap+1;
+    end;    
+    l:=l^.sig;    
+end;
+end;
+
 procedure leerarbol(ar:arbol;var i : integer;x:real);
 var
 cantap:integer;
 begin 
 cantap:=0;
     if (ar <> nil) then begin 
-
         leerarbol(ar^.HI,i,x);
+        
         if (impar(ar^.dato.legajo) = true) then 
             i:=i + 1;
-        if (calcularpromedio(ar^.dato.finales) > x) then 
-            writeln('legajo: ',ar^.dato.legajo,' promedio ',calcularpromedio(ar^.dato.finales):2:2,' | '); 
-        {aprobadas(ar^.dato.finales,cantap);    
-        writeln('legajo: ',ar^.dato.legajo,'| cantidad de materias aprobadas: ',cantap,' | ');}
-        leerarbol(ar^.HD,i,x);
 
-    end;
+        aprobadas(ar^.dato.finales,cantap);    
+        writeln('legajo: ',ar^.dato.legajo,'| cantidad de materias aprobadas: ',cantap,' | ');
+
+        if (calcularpromedio(ar^.dato.finales) > x) then 
+            writeln('legajo: ',ar^.dato.legajo,' promedio ',calcularpromedio(ar^.dato.finales):2:2,' | ');
+
+        leerarbol(ar^.HD,i,x);
+    end;    
 end;
 var 
 ar:arbol;
@@ -164,13 +167,15 @@ begin
 i:=0;
 randomize;
 armararbol(ar);
-writeln('INGRESE PROMEDIO A CUMPLIR: ');readln(prom);
+writeln('');
+write('INGRESE PROMEDIO A CUMPLIR: ');readln(prom);
 leerarbol(ar,i,prom);
-writeln(' ');
 writeln('---------------');
 writeln('LOS LEGAJOS IMPARES SON: ',i);
 
 end.
+
+
 
 
 

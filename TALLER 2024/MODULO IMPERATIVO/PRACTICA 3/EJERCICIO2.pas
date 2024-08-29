@@ -19,145 +19,270 @@ d. Implemente un módulo que reciba el árbol generado en iii. y retorne el cód
 con mayor cantidad de ventas.}
 program eje2; 
 type 
-    producto=record
+{INCISO 1}
+    venta=record
         codigo,fecha,cantidad:integer;
     end;    
     arbol=^nodo;
     nodo=record 
-        dato:producto;
+        dato:venta;
         HI:arbol;
         HD:arbol;
     end;
-    lista=^nodo2;
-    nodo2=record    
-        dato:producto;
-        sig:lista;
-    end;    
-procedure leerproducto(var p:producto);
+
+{INCISO 2}
+    productovendido=record 
+        codigo:integer;
+        cantidad:integer;
+    end;
+
+    arbolprod=^nodop;
+    nodop=record
+        dato:productovendido;
+        HijoI:arbolprod;
+        HijoD:arbolprod;
+    end;
+
+{INCISO 3}
+    listav = record
+        fecha: integer;
+        cantidad: integer;
+    end;
+    lista = ^nodol;
+    nodol = record
+        dato: listav;
+        sig: lista;
+    end;
+    VentasLista = record
+        codigo: integer;
+        l: lista;
+    end;
+    arbolv = ^nodov;
+    nodov = record
+        dato: VentasLista;
+        HI: arbolv;
+        HD: arbolv;
+    end;
+
+
+procedure leerventa(var v:venta);
 var 
 ale:integer;
 begin 
-{writeln('INGRESANDO CODIGO DEL PRODUCTO: ');}ale:=random(100);p.codigo:=ale;{writeln('codigo ingresado: ',p.codigo);}
-{writeln('INGRESANDO FECHA DE LA VENTA DEL PRODUCTO: ');}ale:=random(31)+1;p.fecha:=ale;{writeln('fecha ingresada: ',p.fecha);}
-{writeln('INGRESANDO CANTIDAD DE UNIDADES VENDIDAS: ');}ale:=random(100)+1;p.cantidad:=ale;{writeln('cantidad ingresada: ',p.cantidad);}  
+{writeln('INGRESANDO CODIGO DEL PRODUCTO: ');}ale:=random(100);v.codigo:=ale;{writeln('codigo ingresado: ',v.codigo);}
+{writeln('INGRESANDO FECHA DE LA VENTA DEL PRODUCTO: ');}ale:=random(31)+1;v.fecha:=ale;{writeln('fecha ingresada: ',v.fecha);}
+{writeln('INGRESANDO CANTIDAD DE UNIDADES VENDIDAS: ');}ale:=random(100)+1;v.cantidad:=ale;{writeln('cantidad ingresada: ',v.cantidad);}  
 end;
-procedure agregar1(var a:arbol;p:producto);
+procedure insertararbol1(var a:arbol;v:venta);
 begin 
     if (a=nil) then begin
         new(a);
-        a^.dato:=p;
+        a^.dato:=v;
         a^.HI:=nil;
         a^.HD:=nil;
     end
     else begin
-        if (p.codigo <  a^.dato.codigo) then 
-            agregar1(a^.HI,p)
+        if (v.codigo <  a^.dato.codigo) then 
+            insertararbol1(a^.HI,v)
         else 
-            agregar1(a^.HD,p);        
+            insertararbol1(a^.HD,v);        
     end;
-end;    
-procedure armararbol1(var a:arbol);
+end;
+procedure insertararbol2(var a: arbolprod; codigo: integer; cantidad: integer);
+begin
+    if (a = nil) then
+    begin
+        new(a);
+        a^.dato.codigo:= codigo;
+        a^.dato.cantidad:= cantidad;
+        a^.HijoI:= nil;
+        a^.HijoD:= nil;
+    end
+    else
+    begin
+        if (codigo = a^.dato.codigo) then
+            a^.dato.cantidad:= a^.dato.cantidad + cantidad
+        else
+        if (codigo < a^.dato.codigo) then
+            insertararbol2(a^.HijoI, codigo, cantidad)
+        else
+            insertararbol2(a^.HijoD, codigo, cantidad);
+    end;
+end;
+procedure agregarVenta(var l: lista; fecha: integer; cantidad: integer);
 var
-p:producto; 
+    nue: lista;
+begin
+    new(nue);
+    nue^.dato.fecha:= fecha;
+    nue^.dato.cantidad:= cantidad;
+    nue^.sig:= l;
+    l:= nue;
+end;
+procedure insertararbol3(var a: arbolv; v: venta);
+begin
+    if (a = nil) then
+    begin
+        new(a);
+        a^.dato.codigo:= v.codigo;
+        a^.dato.l:= nil;
+        agregarVenta(a^.dato.l, v.fecha, v.cantidad);
+        a^.HI:= nil;
+        a^.HD:= nil;
+    end
+    else
+    begin
+        if (v.codigo = a^.dato.codigo) then
+        begin
+            agregarVenta(a^.dato.l, v.fecha, v.cantidad);
+        end
+        else
+        if (v.codigo < a^.dato.codigo) then
+            insertararbol3(a^.HI, v)
+        else
+            insertararbol3(a^.HD, v);
+    end;
+end;
+procedure armarARBOLES(var a:arbol;var ap:arbolprod;var av:arbolv);
+var
+v:venta;
 begin 
-leerproducto(p);
-while (p.codigo <> 0) do begin
-    agregar1(a,p);
-    leerproducto(p);
+leerventa(v);
+while (v.codigo <> 0) do begin
+    insertararbol1(a,v);
+    insertararbol2(ap,v.codigo,v.cantidad);
+    insertararbol3(av,v);
+    leerventa(v);
 end;
 end;
 procedure leerarbol1(a:arbol);
 begin 
     if (a<>nil) then begin 
         leerarbol1(a^.HI);
-        writeln(a^.dato.codigo);
+        writeln('CODIGO= ',a^.dato.codigo,' | FECHA= ',a^.dato.fecha,' | CANTIDAD= ',a^.dato.cantidad);
         leerarbol1(a^.HD);
     end;
-end;
-procedure agregar2(var a:arbol;p:producto);
+end; 
+procedure leerarbol2(ap:arbolprod);
 begin 
-    if (a=nil) then begin
-        new(a);
-        a^.dato:=p;
-        a^.HI:=nil;
-        a^.HD:=nil;
-    end
-    else begin
-        if (p.codigo <  a^.dato.codigo) then 
-            agregar2(a^.HI,p)
-        else if (p.codigo >  a^.dato.codigo) then
-            agregar2(a^.HD,p) 
-        else 
-            a^.dato.cantidad:=p.cantidad + a^.dato.cantidad;           
+    if (ap<>nil) then begin 
+        leerarbol2(ap^.HijoI);
+        writeln('CODIGO= ',ap^.dato.codigo,' | CANTIDAD= ',ap^.dato.cantidad);
+        leerarbol2(ap^.HijoD);
     end;
 end;
-procedure armararbol2(var a:arbol);
-var
-p:producto; 
-begin 
-leerproducto(p);
-while (p.codigo <> 0) do begin
-    agregar2(a,p);
-    leerproducto(p);
-end;
-end;
-procedure leerarbol2(a:arbol);
-begin 
-    if (a<>nil) then begin 
-        leerarbol2(a^.HI);
-        write(a^.dato.codigo);write('    ');writeln(a^.dato.cantidad);
-        leerarbol2(a^.HD);
-    end;
-end;
-procedure armarnodo(var l:lista;venta:integer;)
-procedure agregar3(var a:arbol;p:producto;var l:lista);
-begin 
-    if (a=nil) then begin
-        new(a);
-        a^.dato:=p;
-        a^.HI:=nil;
-        a^.HD:=nil;
-    end
-    else begin
-        if (p.codigo <  a^.dato.codigo) then 
-            agregar3(a^.HI,p)
-        else if (p.codigo >  a^.dato.codigo) then
-            agregar3(a^.HD,p) 
-        else 
-            a^.dato.cantidad:=p.cantidad + a^.dato.cantidad;           
-    end;
-end;
-procedure armararbol3(var a:arbol);
-var
-p:producto; 
-l:lista;
-begin 
-leerproducto(p);
-while (p.codigo <> 0) do begin
-    agregar3(a,p,l);
-    leerproducto(p);
-end;
-end;
-procedure leerarbol3(a:arbol);
-begin 
-    if (a<>nil) then begin 
-        leerarbol3(a^.HI);
-        write(a^.dato.codigo);write('    ');writeln(a^.dato.cantidad);
-        leerarbol3(a^.HD);
-    end;
-end;   
+procedure leerlista(l: lista);
 var 
-a,a2:arbol;
+i:integer;
+begin
+i:=0;
+    while(l<>nil) do
+        begin
+            i:=i+1;
+            write(i,'| Dia= ', l^.dato.fecha , ' Cantidad= ',l^.dato.cantidad, ' - ');
+            l:= l^.sig;
+        end;
+end;
+procedure leernodo(v:VentasLista);
+begin
+    write('CODIGO=', v.codigo, ' | Lista--->  ');
+    leerlista(v.l);
+    writeln();
+end;
+procedure leerarbol3(a:arbolv);
 begin 
+    if (a<>nil) then 
+        begin 
+            leerarbol3(a^.HI);
+            leernodo(a^.dato);
+            leerarbol3(a^.HD);
+        end;
+end;
+procedure BUSCARFECHA(a:arbol;x:integer;var cant:integer);
+begin 
+	if ( a<> nil ) then begin 
+		if ( x = a^.dato.fecha) then 
+			cant:=cant+1;
+		BUSCARFECHA(a^.HI,x,cant);
+		BUSCARFECHA(a^.HD,x,cant);
+end;
+end;
+procedure actualizarporlista(l:lista;cod:integer;var cantmax,cmax:integer);
+var 
+cant:integer;
+begin 
+    cant:=0;
+    while (l<> nil) do begin
+        cant:=cant + 1;
+        l:=l^.sig;
+    end;
+    if (cantmax < cant) then begin 
+        cantmax:=cant;
+        cmax:=cod;
+    end;
+end;  
+procedure maximosarbol2(a:arbolprod;var cantmax,codmax:integer);
+begin 
+    if (a<>nil) then begin
+        if (a^.dato.cantidad > cantmax) then begin 
+            cantmax:=a^.dato.cantidad;
+            codmax:= a^.dato.codigo;
+        end;
+        maximosarbol2(a^.HijoI,cantmax,codmax);
+        maximosarbol2(a^.HijoD,cantmax,codmax);
+    end;
+end;          
+procedure maximosarbol3(a:arbolv;var cantmax,codmax:integer);
+begin 
+    if (a<>nil) then begin
+        actualizarporlista(a^.dato.l,a^.dato.codigo,cantmax,codmax);
+        maximosarbol3(a^.HI,cantmax,codmax);
+        maximosarbol3(a^.HD,cantmax,codmax);
+end;  
+end;      
+var 
+a:arbol;
+at:arbolprod;
+av:arbolv;
+codmax,cantmax,cantf,fecha:integer;
+begin 
+cantf:=0;
+cantmax:=-1;
+codmax:=0;
+a:=nil;
+at:=nil;
+av:=nil;
 randomize;
-armararbol1(a);
+armarARBOLES(a,at,av);
+writeln('LEYENDO ARBOL 1 ');
 leerarbol1(a);
-writeln('ARBOL 1 TERMINADO');
-armararbol2(a2);
-leerarbol2(a2);
-writeln('ARBOL 2 TERMINADO');
-armararbol3(a3);
-leerarbol3(a3);
+writeln(' ');
+writeln('LEYENDO ARBOL 2 ');
+leerarbol2(at);
+writeln(' ');
+writeln('LEYENDO ARBOL 3 ');
+leerarbol3(av);
+writeln(' ');
+writeln(' ');
+writeln('---OBJETIVO DEL ARBOL 1 ---');
+writeln('INGRESE FECHA A BUSCAR EN ARBOL 1= ');readln(fecha);
+BUSCARFECHA(a,fecha,cantf);
+writeln('LA FECHA INGRESADA SE HA ENCONTRADO -> ',cantf,' veces');
+writeln(' ');
+writeln(' ');
+writeln('---OBJETIVO DEL ARBOL 2 ---');
+maximosarbol2(at,cantmax,codmax);
+writeln('EL PRODUCTO CON MAYOR CANTIDAD DE VENTAS ES EL CODIGO -> ',codmax,' CON UNA CANTIDAD DE ',cantmax,' veces');
+writeln(' ');
+writeln(' ');
+cantmax:=-1;
+codmax:=0;
+writeln('---OBJETIVO DEL ARBOL 3 ---');
+maximosarbol3(av,cantmax,codmax);
+writeln('EL PRODUCTO CON MAYOR CANTIDAD DE VENTAS ES EL CODIGO -> ',codmax,' CON UNA CANTIDAD DE ',cantmax,' veces');
 end.
+
+
+
 
 

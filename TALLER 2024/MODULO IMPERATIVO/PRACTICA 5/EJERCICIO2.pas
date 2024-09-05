@@ -60,7 +60,16 @@ type
       HD:arbolxmarca;
     end;  
   
-  vector1 = array [2010..2018] of autos;
+  
+  listaano=^nodol2;
+  nodol2=record 
+		dato:autos;
+		sig:listaano;
+	end;	
+  
+  
+  
+  vectorl = array [2010..2018] of listaano;
 
 
 
@@ -105,7 +114,7 @@ begin
   l:=nue;
 end;  
 
-procedure agregararbol2(ar:arbolxmarca;a:autos);
+procedure agregararbol2(var ar:arbolxmarca;a:autos);
 begin 
   if (ar = nil) then begin 
     new(ar);
@@ -176,18 +185,123 @@ begin
       else    
         INCISOC(a^.HD,marca,cant);
   end;
-end;    
+end; 
+
+
+procedure agregaradelante(var l:listaano;a:autos);
+var 
+nue:listaano;
+begin
+new(nue);
+nue^.dato:=a;
+nue^.sig:=l;
+l:=nue;
+end;
+
+
+procedure informarlistasnuevas(v:vectorl);
+var 
+i:integer;
+l:listaano;
+begin
+	for i := 2010 to 2018 do begin 
+		writeln('LISTA DEL ANO:  ',i);
+		l:=v[i];
+		if (l=nil) then 
+			write('LISTA VACIA')
+		else begin
+			writeln(' ');
+			while(l <> nil) do begin
+				writeln('MARCA: ',l^.dato.marca,' MODELO: ',l^.dato.modelo,' PATENTE: ',l^.dato.patente,' ANO: ',l^.dato.ano);
+				l:=l^.sig;
+		end;
+		end;
+	end;
+end;			
+
+procedure INCISOD(var v:vectorl;a:arbolpat);
+begin 
+	writeln('PASO');
+	if (a <> nil ) then begin 
+		agregaradelante(v[a^.dato.ano],a^.dato);
+		writeln('PASO1');
+		INCISOD(v,a^.HI);
+		INCISOD(v,a^.HD);
+	end;
+
+end;		
+
+procedure inicializarvectorlista(var v:vectorl);
+var 
+i:integer;
+begin 
+for i:= 2010 to 2018 do begin
+	v[i]:=nil;
+end;
+end;
+	
+ 
+function INCISOE(a:arbolpat;patente:integer):string;
+begin
+if (a<>nil) then begin
+	if (a^.dato.patente=patente) then 
+		INCISOE:=a^.dato.modelo
+	else	begin
+		if (a^.dato.patente > patente) then 
+			INCISOE(a^.HI,patente)
+		else 
+			INCISOE(A^.HD,patente);
+	end;
+end;
+end;
+
+
+procedure buscarpatentexlista(l:lista;patente:integer;var aux:string);
+var 
+sigo:boolean;
+begin 
+sigo:=false;
+	while (l<>nil) and (sigo = false) do begin 
+		if ( l^.dato.patente = patente ) then begin
+			aux:=l^.dato.modelo;
+			sigo:=true;
+		end	
+		else 
+			l:=l^.sig;
+	end;	
+end;			
+			
+
+	
+function INCISOF(a:arbolxmarca;patente:integer):string;
+var 
+	aux:string;
+begin
+		if (a<>nil) then begin
+			buscarpatentexlista(a^.dato.l,patente,aux);
+		else
+		if (a^.dato.patente > patente) then 
+			INCISOF(a^.HI,patente)
+		else 
+			INCISOF(A^.HD,patente);
+	end;
+end;
+end;
+			
+
+ 
 var 
 a1:arbolpat;
 a2:arbolxmarca;
 marca:string;
-cant:integer;
+cant,patente:integer;
+v:vectorl;
 begin
 cant:=0;
 randomize;
 a1:=nil;
 a2:=nil;
-
+inicializarvectorlista(v);
 cargararboles(a1,a2);
 writeln(' ');
 writeln(' ');
@@ -201,4 +315,17 @@ cant:=0;
 write('INGRESE MARCA A BUSCAR: ');readln(marca);
 INCISOC(a2,marca,cant);
 writeln('LA MARCA INGRESADA TIENE: ',cant);
+writeln(' ');
+writeln(' ');
+INCISOD(v,a1);
+writeln('PASOFINAL');
+informarlistasnuevas(v);
+writeln(' ');
+writeln(' ');
+write('INGRESE PATENTE A BUSCAR: ');readln(patente);
+writeln('LA PATENTE ',patente,' PERTENECE A EL AUTO DE MODELO ',INCISOE(a1,patente));
+writeln(' ');
+writeln(' ');
+write('INGRESE OTRA PATENTE A BUSCAR: ');readln(patente);
+writeln('LA PATENTE ',patente,' PERTENECE A EL AUTO DE MODELO ',INCISOF(a2,patente));
 end.

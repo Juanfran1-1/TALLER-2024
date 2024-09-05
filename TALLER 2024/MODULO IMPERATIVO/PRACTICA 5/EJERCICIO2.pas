@@ -221,10 +221,8 @@ end;
 
 procedure INCISOD(var v:vectorl;a:arbolpat);
 begin 
-	writeln('PASO');
 	if (a <> nil ) then begin 
 		agregaradelante(v[a^.dato.ano],a^.dato);
-		writeln('PASO1');
 		INCISOD(v,a^.HI);
 		INCISOD(v,a^.HD);
 	end;
@@ -256,16 +254,14 @@ end;
 end;
 
 
-procedure buscarpatentexlista(l:lista;patente:integer;var aux:string);
-var 
-sigo:boolean;
+procedure buscarpatentexlista(l:lista;patente:integer;var modelo:string;sigo:boolean);
 begin 
-sigo:=false;
-	while (l<>nil) and (sigo = false) do begin 
-		if ( l^.dato.patente = patente ) then begin
-			aux:=l^.dato.modelo;
-			sigo:=true;
-		end	
+	while (l<>nil) and (sigo = true) do begin 
+		if ( l^.dato.patente = patente ) then 
+      begin
+			  modelo:=l^.dato.modelo;
+			  sigo:=false;
+		  end	
 		else 
 			l:=l^.sig;
 	end;	
@@ -273,32 +269,29 @@ end;
 			
 
 	
-function INCISOF(a:arbolxmarca;patente:integer):string;
-var 
-	aux:string;
+procedure INCISOF(a:arbolxmarca;patente:integer;var modelo:string;sigo:boolean);
 begin
-		if (a<>nil) then begin
-			buscarpatentexlista(a^.dato.l,patente,aux);
-		else
-		if (a^.dato.patente > patente) then 
-			INCISOF(a^.HI,patente)
-		else 
-			INCISOF(A^.HD,patente);
-	end;
+		if (a<>nil) and (sigo = true) then begin
+			buscarpatentexlista(a^.dato.l,patente,modelo,sigo);
+      if (sigo=true) then begin
+		    INCISOF(a^.HI,patente,modelo,sigo);
+        INCISOF(A^.HD,patente,modelo,sigo);
+      end;
+    end;    
 end;
-end;
-			
 
  
 var 
 a1:arbolpat;
 a2:arbolxmarca;
-marca:string;
+marca,modelo:string;
 cant,patente:integer;
 v:vectorl;
+sigo:boolean;
 begin
 cant:=0;
 randomize;
+sigo:=true;
 a1:=nil;
 a2:=nil;
 inicializarvectorlista(v);
@@ -327,5 +320,7 @@ writeln('LA PATENTE ',patente,' PERTENECE A EL AUTO DE MODELO ',INCISOE(a1,paten
 writeln(' ');
 writeln(' ');
 write('INGRESE OTRA PATENTE A BUSCAR: ');readln(patente);
-writeln('LA PATENTE ',patente,' PERTENECE A EL AUTO DE MODELO ',INCISOF(a2,patente));
+INCISOF(a2,patente,modelo,sigo);
+writeln('LA PATENTE ',patente,' PERTENECE A EL AUTO DE MODELO ',modelo);
 end.
+

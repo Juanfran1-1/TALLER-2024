@@ -1,0 +1,69 @@
+programa ejercicio3
+procesos 
+  proceso papelesxesquina(ES papeles:numero)
+  comenzar 
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      papeles:=papeles+1
+    mientras(HayPapelEnLaBolsa)
+      depositarPapel
+  fin
+  
+  proceso floresxesquina(ES flores:numero)
+  comenzar 
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores+1
+    mientras(HayFlorEnLaBolsa)
+      depositarFlor
+  fin
+  
+  proceso Escalon(ES papeles:numero ; ES flores:numero ; E pasos:numero)
+  comenzar
+    repetir 2
+      repetir pasos
+        papelesxesquina(papeles)
+        floresxesquina(flores)
+        mover
+      derecha
+    repetir 2
+      derecha
+  fin
+  
+  proceso Escalera(ES cantidad:numero)
+  variables
+    flores, papeles, pasos:numero
+  comenzar
+    pasos:=1
+    repetir 5
+      flores:=0
+      papeles:=0
+      Escalon(papeles,flores,pasos)
+      si(papeles - flores =1)
+        cantidad:=cantidad + 1                        
+      pasos := pasos + 1
+  fin
+areas
+  ciudad : AreaC(1,1,100,100)
+robots
+  robot robot1
+  variables 
+    cantidad:numero
+  comenzar
+    cantidad:=0
+    Escalera(cantidad)
+    Informar(cantidad)
+  fin 
+variables
+  r1:robot1
+  r2:robot1
+  r3:robot1
+comenzar
+  AsignarArea(r1,ciudad)
+  AsignarArea(r2,ciudad)
+  AsignarArea(r3,ciudad)
+  Iniciar(r1,22,6)
+  Iniciar(r2,17,10)
+  Iniciar(r3,12,14)  
+fin  
+                  

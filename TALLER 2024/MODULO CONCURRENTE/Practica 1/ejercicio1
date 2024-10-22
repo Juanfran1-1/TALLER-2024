@@ -1,0 +1,46 @@
+programa ejercicio1
+procesos 
+  proceso TomarxEsquina(ES flores:numero;ES esquinavacia:numero)
+  comenzar 
+    si(HayFlorEnLaEsquina)
+      mientras(HayFlorEnLaEsquina)
+        tomarFlor
+        flores:= flores + 1 
+    sino 
+      esquinavacia:= esquinavacia + 1                                                           
+  fin 
+  proceso moverytomar(ES flores:numero; ES esquinavacia:numero)
+  comenzar
+    repetir 99
+      TomarxEsquina(flores,esquinavacia)
+      mover
+    TomarxEsquina(flores,esquinavacia)
+  fin 
+  proceso depositarFlores(E flores:numero)
+  comenzar 
+    repetir flores
+      depositarFlor
+  fin
+areas 
+  ciudad: AreaC(1,1,100,100)
+robots 
+  robot tipo1
+  variables 
+    flores:numero
+    esquinavacia:numero
+  comenzar 
+    flores:=0
+    esquinavacia:=0
+    moverytomar(flores,esquinavacia)
+    depositarFlores(flores)
+    Informar('florestomadas',flores)
+    Informar('esquinasvacias',esquinavacia)
+  fin
+variables 
+  robot1:tipo1
+comenzar
+  AsignarArea(robot1,ciudad)
+  Iniciar(robot1,1,1)
+fin            
+        
+      

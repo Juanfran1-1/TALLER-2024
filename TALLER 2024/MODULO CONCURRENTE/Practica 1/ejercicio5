@@ -1,0 +1,116 @@
+
+programa ejercicio5
+procesos
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores + 1
+  fin
+  proceso depositarFlores(E flores:numero)  
+  comenzar  
+    repetir flores  
+      depositarFlor  
+  fin 
+  proceso moverytomarflores(E movimientos:numero; ES flores:numero) 
+  comenzar
+    repetir movimientos - 1
+      juntarFlores(flores)
+      mover
+    juntarFlores(flores)
+    depositarFlores(flores)
+  fin
+  proceso areaFlores(E movimientos:numero)
+  variables
+    flores:numero
+  comenzar
+    flores:=0
+    moverytomarflores(movimientos,flores)
+  fin  
+  proceso juntarPapeles(ES papeles:numero)
+  comenzar 
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+  fin
+  proceso depositarPapeles(E papeles:numero)
+  comenzar
+    repetir papeles
+      depositarPapel  
+  fin
+  proceso moverytomarpapeles(E movimientos:numero ; ES papeles:numero )
+  comenzar
+    repetir movimientos - 1
+      juntarPapeles(papeles)
+      mover
+    juntarPapeles(papeles)
+    depositarPapeles(papeles)  
+  fin
+  proceso areaPapeles(E movimientos:numero)
+  variables
+    papeles:numero
+  comenzar 
+    papeles:=0
+    moverytomarpapeles(movimientos,papeles)
+  fin                   
+areas
+  ciudad: AreaP (1,75,15,80) {robot1}
+  ciudad2: AreaP (75,80,80,99) {robot2}
+  ciudad3: AreaP (70,10,99,15) {robot3}
+  ciudad4: AreaP (10,1,15,10) {robot4}
+robots
+  robot robot1
+  variables 
+    movimientos:numero
+  comenzar
+    derecha
+    movimientos:=15
+    areaFlores(movimientos)
+    Pos(1,80)
+    areaFlores(movimientos)
+  fin
+  
+  robot robot2
+  variables
+    movimientos:numero
+  comenzar
+    movimientos:=20
+    areaPapeles(movimientos)
+    Pos(80,80)
+    areaPapeles(movimientos)
+  fin
+  
+  robot robot3
+  variables
+    movimientos:numero
+  comenzar
+    derecha
+    movimientos:=30
+    areaPapeles(movimientos)
+    Pos(70,15)
+    areaPapeles(movimientos)
+  fin   
+  
+  robot robot4
+  variables
+    movimientos:numero
+  comenzar
+    movimientos:=10
+    areaPapeles(movimientos)
+    Pos(15,1)
+    areaPapeles(movimientos)
+  fin
+variables
+  r1: robot1
+  r2:robot2
+  r3:robot3
+  r4:robot4
+comenzar
+  AsignarArea(r1, ciudad)
+  AsignarArea(r2, ciudad2)
+  AsignarArea(r3, ciudad3)
+  AsignarArea(r4, ciudad4)
+  Iniciar(r1, 1,75)
+  Iniciar(r2, 75,80)
+  Iniciar(r3, 70,10)
+  Iniciar(r4, 10,1)
+fin

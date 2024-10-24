@@ -1,0 +1,160 @@
+programa ejercicio4
+procesos
+  proceso limpiarEsquina(ES cant:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      cant:=cant + 1
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel 
+      cant:=cant + 1 
+  fin
+  proceso Esquina(ES cant:numero)
+  variables
+    avi,cai,av,ca:numero
+  comenzar 
+    avi:=PosAv
+    cai:=PosCa
+    Random(av,25,75)
+    Random(ca,25,75)
+    Pos(av,ca)
+    limpiarEsquina(cant)
+    Pos(avi,cai) 
+  fin     
+  
+  proceso inicializar(ES a1:numero;ES a2:numero;ES a3:numero;ES a4:numero)
+  comenzar
+    a1:=0
+    a2:=0
+    a3:=0
+    a4:=0 
+  fin
+     
+  proceso informarfinal
+  comenzar
+    EnviarMensaje(F,r1)
+    EnviarMensaje(F,r2)
+    EnviarMensaje(F,r3)
+    EnviarMensaje(F,r4)
+  fin
+  
+  proceso calcularmax(E a1:numero;E a2:numero;E a3:numero;E a4:numero;ES rmax:numero)
+  variables
+    max:numero
+  comenzar
+    max:= -1
+    si a1 > max
+      max := a1
+      rmax := 1
+    si a2 > max
+      max := a2
+      rmax := 2
+    si a3 > max
+      max := a3
+      rmax := 3
+    si a4 > max
+      max := a4
+      rmax := 4
+  fin
+  proceso enviaracadarobot(E acceso:numero;E verificar:boolean)
+  comenzar
+    si (acceso = 1)
+      EnviarMensaje(verificar, r1)
+    sino
+      si (acceso=2)
+        EnviarMensaje(verificar, r2)
+      sino
+        si (acceso=3)
+          EnviarMensaje(verificar, r3)
+        sino
+          EnviarMensaje(verificar, r4)
+  fin
+  
+areas
+  cuadrante: AreaPC(25,25,75,75)
+  areaF: AreaP(1,1,1,1)
+  area1: AreaP(25,1,25,1)
+  area2: AreaP(30,1,30,1)
+  area3: AreaP(35,1,35,1)
+  area4: AreaP(40,1,40,1) 
+  
+robots
+
+  robot limpiador
+  variables
+    verificar,ganador:boolean
+    cant:numero
+  comenzar
+    RecibirMensaje(verificar,rjefe)
+    mientras(verificar)
+      RecibirMensaje(cant,rjefe)
+      Esquina(cant)
+      EnviarMensaje(cant,rjefe)
+      RecibirMensaje(verificar,rjefe)
+    RecibirMensaje(ganador,rjefe)
+    si(ganador)
+      Pos(50,50)
+  fin 
+  
+  
+  robot jefe
+  variables 
+    a1,a2,a3,a4:numero
+    rmax,acceso:numero
+    verificar:boolean 
+  comenzar
+    inicializar(a1,a2,a3,a4)            
+    repetir 10
+      Random(acceso,1,4)
+      si (acceso = 1)
+        EnviarMensaje(V,r1)
+        EnviarMensaje(a1,r1)
+        RecibirMensaje(a1,r1)
+      sino
+        si (acceso = 2)
+          EnviarMensaje(V,r2)
+          EnviarMensaje(a2,r2)
+          RecibirMensaje(a2,r2)
+        sino
+          si (acceso = 3)
+            EnviarMensaje(V,r3)
+            EnviarMensaje(a3,r3)
+            RecibirMensaje(a3,r3)
+          sino
+            si (acceso = 4)
+              EnviarMensaje(V,r4)
+              EnviarMensaje(a3,r4)
+              RecibirMensaje(a4,r4)      
+    informarfinal
+    calcularmax(a1,a2,a3,a4,rmax)
+    acceso:=1
+    repetir 4
+      si (acceso = rmax)
+        verificar := V
+      sino
+        verificar := F
+      enviaracadarobot(acceso,verificar)
+      acceso:=acceso + 1
+    Informar('GANADOR',rmax)
+  fin        
+variables
+  r1, r2, r3, r4: limpiador
+  rjefe: jefe
+comenzar
+  AsignarArea(r1, cuadrante)
+  AsignarArea(r1, area1)
+  AsignarArea(r2, cuadrante)
+  AsignarArea(r2, area2)
+  AsignarArea(r3, cuadrante)
+  AsignarArea(r3, area3)
+  AsignarArea(r4, cuadrante)
+  AsignarArea(r4, area4)
+  AsignarArea(rjefe, areaF)
+  Iniciar(r1, 25,1)
+  Iniciar(r2, 30,1)
+  Iniciar(r3, 35,1)
+  Iniciar(r4, 40,1)
+  Iniciar(rjefe, 1,1)
+fin      
+
+

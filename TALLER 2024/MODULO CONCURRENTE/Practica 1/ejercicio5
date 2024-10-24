@@ -85,9 +85,9 @@ robots
   comenzar
     derecha
     movimientos:=30
-    areaPapeles(movimientos)
+    areaFlores(movimientos)
     Pos(70,15)
-    areaPapeles(movimientos)
+    areaFlores(movimientos)
   fin   
   
   robot robot4

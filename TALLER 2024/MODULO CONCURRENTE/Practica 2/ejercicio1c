@@ -1,0 +1,83 @@
+programa ejemplo
+procesos
+  proceso tomarFlores(ES flores: numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores+1
+  fin
+  
+  proceso recorreryenviar
+  variables
+    flores:numero
+  comenzar
+    repetir 9
+      tomarFlores(flores)
+      mover
+    tomarFlores(flores)
+    EnviarMensaje(flores,fiscalizador)
+  fin
+        
+areas
+  ciudad: AreaPC (1,1,6,60)
+robots
+  robot juntador
+  comenzar
+    recorreryenviar  
+  fin
+  
+  robot jefe
+  variables
+    fr1,fr2,f3,f4,f5,f6,max,rmax:numero
+  comenzar
+    max:=-99
+    RecibirMensaje(fr1,robot1)
+    RecibirMensaje(fr2,robot2)  
+    RecibirMensaje(f3,robot3)
+    RecibirMensaje(f4,robot4)
+    RecibirMensaje(f5,robot5)
+    RecibirMensaje(f6,robot6) 
+    si (fr1 > max)
+      max:=fr1
+      rmax:=1
+    si (fr2 > max)
+      max:=fr2
+      rmax:=2
+    si(f3 > max)
+      max:=f3 
+      rmax:=3
+    si(f4 > max)
+      max:=f4
+      rmax:=4
+    si(f5 > max)
+      max:=f5
+      rmax:=5
+    si(f6 > max)
+      max:=f6
+      rmax:=6  
+    Informar('FLORES JUNTADAS',max)       
+  fin       
+variables
+  robot1: juntador
+  robot2: juntador
+  robot3: juntador
+  robot4: juntador 
+  robot5: juntador
+  robot6: juntador
+  fiscalizador: jefe
+comenzar
+  AsignarArea(robot1, ciudad)
+  AsignarArea(robot2, ciudad)
+  AsignarArea(robot3, ciudad)
+  AsignarArea(robot4, ciudad)
+  AsignarArea(robot5, ciudad)
+  AsignarArea(robot6, ciudad)
+  AsignarArea(fiscalizador, ciudad)
+  Iniciar(robot1, 1,1)
+  Iniciar(robot2, 2,11)
+  Iniciar(robot3, 3,21)
+  Iniciar(robot4, 4,31)
+  Iniciar(robot5, 5,41)
+  Iniciar(robot6, 6,51)
+  Iniciar(fiscalizador, 2,1)
+fin

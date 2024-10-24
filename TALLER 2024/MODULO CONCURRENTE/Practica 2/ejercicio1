@@ -1,0 +1,64 @@
+programa ejemplo
+procesos
+  proceso tomarFlores(ES flores: numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores+1
+  fin
+  
+  proceso recorrer(ES flores:numero)
+  comenzar
+    repetir 9
+      tomarFlores(flores)
+      mover
+    tomarFlores(flores)
+  fin
+        
+areas
+  ciudad: AreaPC (1,1,20,20)
+robots
+  robot juntador1
+  variables
+    flores:numero
+    flores2:numero
+    resultado:numero
+  comenzar
+    flores:=0
+    recorrer(flores)
+    EnviarMensaje(flores,robot2)
+    RecibirMensaje(flores2,robot2)
+    resultado:= flores - flores2
+    si flores > flores2
+      Informar('GANADORROBOT1', resultado)
+    sino
+      si flores = flores2
+        Informar('IGUALES', resultado)
+  fin
+  
+  robot juntador2
+  variables
+    flores:numero
+    flores2:numero
+    resultado:numero
+  comenzar
+    flores:=0
+    recorrer(flores)
+    EnviarMensaje(flores,robot1)
+    RecibirMensaje(flores2,robot1)
+    resultado:= flores - flores2
+    si flores > flores2
+      Informar('GANADORROBOT2',resultado)
+
+     
+  fin
+    
+variables
+  robot1: juntador1
+  robot2: juntador2
+comenzar
+  AsignarArea(robot1, ciudad)
+  AsignarArea(robot2, ciudad)
+  Iniciar(robot1, 1,1)
+  Iniciar(robot2, 2,11)
+fin

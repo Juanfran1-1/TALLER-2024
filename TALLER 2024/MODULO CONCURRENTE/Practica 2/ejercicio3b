@@ -1,0 +1,104 @@
+programa ejercicio3
+procesos 
+  proceso tomarPapeles(ES papeles:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      papeles:=papeles + 1
+  fin 
+  
+  proceso tomarFlores(ES flores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores + 1
+  fin 
+  
+  proceso recorrerFlores(ES flores:numero)
+  comenzar
+    repetir 9
+      tomarFlores(flores)
+      mover
+    tomarFlores(flores)
+  fin
+  
+  proceso recorrerPapeles(ES papeles:numero)
+  comenzar
+    repetir 9
+      tomarPapeles(papeles)      
+      mover
+    tomarPapeles(papeles)
+  fin
+
+areas
+  ciudad: AreaPC(1,1,100,100)
+robots 
+  robot robot1
+  variables
+    papeles:numero
+  comenzar
+    derecha
+    papeles:=0
+    recorrerPapeles(papeles)    
+    EnviarMensaje(papeles,A2)
+    Pos(21,1)
+    recorrerPapeles(papeles)    
+    EnviarMensaje(papeles,A2)
+  fin 
+ 
+  robot robot2
+  variables 
+    papeles:numero
+  comenzar
+    derecha
+    RecibirMensaje(papeles,A1)
+    recorrerPapeles(papeles)
+    RecibirMensaje(papeles,A1)
+    Pos(31,1)
+    recorrerPapeles(papeles)    
+    Informar(papeles)
+  fin
+ 
+  robot robot3
+  variables
+    flores:numero
+  comenzar
+    derecha
+    flores:=0
+    recorrerFlores(flores)    
+    EnviarMensaje(flores,B2)
+    Pos(21,5)
+    recorrerFlores(flores)    
+    EnviarMensaje(flores,B2)
+  fin 
+ 
+  robot robot4
+  variables 
+    flores:numero
+  comenzar
+    derecha
+    RecibirMensaje(flores,B1)
+    recorrerFlores(flores)
+    RecibirMensaje(flores,B1)
+    Pos(31,5)
+    recorrerFlores(flores)
+    Informar(flores)
+  fin
+
+variables
+  A1:robot1
+  A2:robot2
+  B1:robot3
+  B2:robot4
+comenzar
+  AsignarArea(A1,ciudad)
+  AsignarArea(A2,ciudad)
+  AsignarArea(B1,ciudad)
+  AsignarArea(B2,ciudad)
+  Iniciar(A1,1,1)
+  Iniciar(A2,11,1)
+  Iniciar(B1,1,5)
+  Iniciar(B2,11,5)
+fin      
+ 
+                          

@@ -1,0 +1,95 @@
+programa ejemplo
+procesos
+  proceso tomarFlores(ES flores: numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores+1
+  fin
+  
+  proceso tomarPapeles(ES papeles:numero)  
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      papeles:=papeles+1
+  fin 
+  
+  proceso escalon(E altura:numero;ES cantidad:numero)
+  variables
+    flores,papeles:numero
+  comenzar
+    repetir altura
+      tomarFlores(flores)
+      tomarPapeles(papeles)
+      mover
+    tomarFlores(flores)
+    tomarPapeles(papeles)  
+    derecha
+    mover
+    tomarFlores(flores)
+    tomarPapeles(papeles)
+    repetir 3
+      derecha
+    si ( flores > papeles)  
+      cantidad:= cantidad + 1     
+  fin 
+  
+  proceso Escalera(ES cantidad:numero)
+  variables
+    altura:numero
+  comenzar
+    repetir 4
+      Random(altura,1,5)
+      escalon(altura,cantidad)
+    EnviarMensaje(cantidad,fiscalizador)
+  fin
+  
+  proceso recibirysumar(ES cantmax:numero)
+  variables         
+    cantidad:numero
+  comenzar
+    RecibirMensaje(cantidad,robot1)
+    cantmax:=cantidad + cantmax
+    RecibirMensaje(cantidad,robot2)
+    cantmax:=cantidad + cantmax
+    RecibirMensaje(cantidad,robot3)
+    cantmax:=cantidad + cantmax        
+  fin
+  
+areas
+  ciudad: AreaPC(1,1,100,100)
+robots
+  robot escalador
+  variables
+    cantidad:numero
+  comenzar
+    cantidad:=0
+    Escalera(cantidad)
+  fin
+  
+  robot contador
+  variables
+    cantmax:numero
+  comenzar
+    cantmax:=0
+    recibirysumar(cantmax)
+    Informar(cantmax)
+  fin
+  
+variables
+  robot1: escalador
+  robot2: escalador 
+  robot3: escalador
+  fiscalizador: contador
+comenzar
+  AsignarArea(robot1,ciudad)
+  AsignarArea(robot2, ciudad)
+  AsignarArea(robot3,ciudad)
+  AsignarArea(fiscalizador, ciudad)
+  Iniciar(robot1,2,1)
+  Iniciar(robot2,7,1)
+  Iniciar(robot3,12,1)
+  Iniciar(fiscalizador,1,1)
+fin           
+      
+            

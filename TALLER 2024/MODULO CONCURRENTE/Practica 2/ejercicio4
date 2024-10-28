@@ -93,6 +93,7 @@ robots
       RecibirMensaje(verificar,rjefe)
     RecibirMensaje(ganador,rjefe)
     si(ganador)
+      Informar('gane',cant)
       Pos(50,50)
   fin 
   

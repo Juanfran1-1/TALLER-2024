@@ -1,0 +1,119 @@
+programa ejercicio4
+procesos 
+  proceso identificadores
+  comenzar
+    EnviarMensaje(1, r1)
+    EnviarMensaje(2, r2)
+    EnviarMensaje(3, r3)
+    EnviarMensaje(4, r4)
+  fin
+  
+  proceso informarultimo(E id: numero)
+  comenzar
+    si(id=1)
+      Informar('Robot', 1)
+    sino
+      si (id=2)
+        Informar('Robot', 2)
+      sino
+        si(id=3)
+          Informar('Robot', 3)
+        sino
+          Informar('Robot', 4)
+  fin
+ 
+  proceso tomarydepositar(E avini:numero;E caini:numero)
+  comenzar
+    tomarFlor
+    Pos(avini,caini)
+    LiberarEsquina(10,10)
+    BloquearEsquina(11,11)   
+    Pos(11,11)
+    depositarFlor
+    Pos(avini,caini)
+    LiberarEsquina(11,11)
+  fin
+ 
+  proceso moverflor(ES existe:boolean)
+  variables
+    avini,caini:numero   
+  comenzar
+    avini:=PosAv
+    caini:=PosCa
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    si HayFlorEnLaEsquina
+      tomarydepositar(avini,caini)
+    sino
+      existe:=F
+      Pos(avini,caini)
+      LiberarEsquina(10,10)
+  fin
+  
+  proceso juntarflores
+  comenzar
+    Pos(11,11)
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+    Pos(1,1)
+  fin
+
+areas
+  areatomar: AreaPC(10,10,10,10)
+  areadepositar: AreaPC(11,11,11,11)
+  areajefe: AreaP(1,1,1,1)
+  arear1: AreaP(9,9,9,9)
+  arear2: AreaP(9,10,9,10)
+  arear3: AreaP(9,11,9,11)
+  arear4: AreaP(9,12,9,12)  
+      
+robots
+  robot limpiador
+  variables  
+    id:numero
+    existe:boolean
+  comenzar
+    RecibirMensaje(id,rjefe)
+    existe:=V
+    mientras(existe)
+      moverflor(existe)
+    EnviarMensaje(id,rjefe)
+  fin 
+  
+  robot jefe
+  variables
+    id:numero
+  comenzar
+    identificadores
+    repetir 4
+      RecibirMensaje(id,*)
+    informarultimo(id)
+    juntarflores 
+  fin 
+
+variables
+  r1, r2, r3, r4: limpiador
+  rjefe: jefe
+comenzar
+  AsignarArea(r1, areatomar)
+  AsignarArea(r1, areadepositar)
+  AsignarArea(r1, arear1)
+  AsignarArea(r2, areatomar)
+  AsignarArea(r2, areadepositar)
+  AsignarArea(r2, arear2)
+  AsignarArea(r3, areatomar)
+  AsignarArea(r3, areadepositar)
+  AsignarArea(r3, arear3)
+  AsignarArea(r4, areatomar)
+  AsignarArea(r4, areadepositar)
+  AsignarArea(r4, arear4)
+  AsignarArea(rjefe, areajefe)
+  AsignarArea(rjefe, areadepositar)
+  Iniciar(r1,9,9)
+  Iniciar(r2,9,10)
+  Iniciar(r3,9,11)
+  Iniciar(r4,9,12)
+  Iniciar(rjefe,1,1)
+fin            
+  
+  

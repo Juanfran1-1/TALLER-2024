@@ -1,0 +1,168 @@
+programa ejercicio6
+procesos
+  proceso juntarpapeles
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+  fin
+  
+  proceso juntarflores
+  comenzar
+    mientras HayFlorEnLaEsquina   
+      tomarFlor
+  fin
+  
+  proceso depositar
+  comenzar
+    si HayFlorEnLaBolsa
+      depositarFlor
+    sino
+      si HayPapelEnLaBolsa
+        depositarPapel
+  fin
+            
+  proceso identificadores
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+  fin
+  
+  proceso posicionaryrecorrer(E ca:numero)
+  comenzar
+    Pos(1,ca)
+    derecha
+    mientras (ca<100) & (HayPapelEnLaBolsa | HayFlorEnLaBolsa)
+      depositar
+      mover
+      ca:= ca + 1
+    mover      
+  fin
+  proceso bloquearyliberar(E av:numero;E ca:numero;E pedido:numero){1:flores,2:papeles,3:ambos}
+  comenzar
+    BloquearEsquina(av,ca)
+    si (pedido = 1)
+      juntarflores
+    sino 
+      si(pedido = 2)
+        juntarpapeles
+      sino
+        juntarpapeles
+        juntarflores
+    mover
+    LiberarEsquina(av,ca)
+  fin
+                  
+    
+areas
+  areacuadrantes: AreaPC(2,2,16,16)
+  areaCALLES: AreaPC(1,20,100,22)
+  areajefe: AreaP(1,1,1,1)
+robots
+  robot c1
+  variables 
+    av,ca,id,pedido:numero
+  comenzar
+    av:=PosAv
+    ca:=PosCa
+    pedido:=1
+    RecibirMensaje(id,rjefe)
+    repetir 4
+      repetir 6
+        juntarflores 
+        si (av = 5 & ca = 8) | (av = 8 & ca = 5)
+          bloquearyliberar(av,ca,pedido)
+        sino
+          mover
+      juntarflores
+      derecha 
+    EnviarMensaje(id,rjefe)
+    RecibirMensaje(ca,rjefe)
+    posicionaryrecorrer(ca)
+  fin
+  
+  robot c2 
+  variables 
+    av,ca,id,pedido:numero
+  comenzar
+    av:=PosAv
+    ca:=PosCa
+    pedido:=3
+    RecibirMensaje(id,rjefe)
+    repetir 4
+      repetir 10
+        juntarflores
+        si (av = 9 & ca = 15) | (av = 15 & ca = 9) | (av = 8 & ca = 5) 
+          bloquearyliberar(av,ca,pedido)
+        sino
+          mover
+      juntarflores
+      derecha 
+    EnviarMensaje(id,rjefe)
+    RecibirMensaje(ca,rjefe)
+    posicionaryrecorrer(ca)
+  fin    
+  
+  robot c3
+  variables 
+    av,ca,id,pedido:numero
+  comenzar
+    av:=PosAv
+    ca:=PosCa
+    pedido:=2
+    RecibirMensaje(id,rjefe)
+    repetir 4
+      repetir 7
+        juntarflores
+        si (av = 9 & ca = 15) | (av = 15 & ca = 9)
+          bloquearyliberar(av,ca,pedido)
+        sino
+          mover
+      juntarflores
+      derecha 
+    EnviarMensaje(id,rjefe)
+    RecibirMensaje(ca,rjefe)
+    posicionaryrecorrer(ca)
+  fin    
+  
+  robot jefe
+  variables
+    id,inicial:numero
+  comenzar
+    inicial:=20
+    identificadores
+    repetir 3
+      RecibirMensaje(id,*)      
+      si (id=1)
+        EnviarMensaje(inicial,r1)
+        inicial:=inicial + 1
+      sino
+        si(id=2)        
+          EnviarMensaje(inicial,r2)
+          inicial:=inicial + 1
+        sino
+          EnviarMensaje(inicial,r3)
+          inicial:=inicial+1
+  fin
+variables
+  r1:c1
+  r2:c2
+  r3:c3
+  rjefe:jefe
+comenzar
+  AsignarArea(r1, areacuadrantes)
+  AsignarArea(r1,areaCALLES)
+  AsignarArea(r2, areacuadrantes)
+  AsignarArea(r2,areaCALLES)
+  AsignarArea(r3, areacuadrantes)
+  AsignarArea(r3,areaCALLES)
+  AsignarArea(rjefe,areajefe)
+  Iniciar(r1,2,2)
+  Iniciar(r2,5,5)
+  Iniciar(r3,9,9)
+  Iniciar(rjefe,1,1)
+fin  
+   
+            
+      
+         

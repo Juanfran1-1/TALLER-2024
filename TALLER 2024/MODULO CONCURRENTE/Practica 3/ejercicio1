@@ -1,0 +1,108 @@
+programa ejercicio1
+procesos 
+  proceso juntarflores(ES flores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores+1
+  fin
+  
+  proceso juntarpapeles(ES papeles:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      papeles:=papeles + 1
+  fin
+  
+  proceso floresopapeles(ES elementos:numero;E vueltas:numero;E fop:numero;E avini:numero;E caini:numero)
+  variables        
+    x,y:numero
+  comenzar
+    elementos:=0
+    repetir vueltas  
+      si(fop=0)
+        Random(x,1,5)
+        Random(y,1,10)
+        BloquearEsquina(x,y)
+        Pos(x,y)
+        juntarflores(elementos)
+        Pos(avini,caini)
+        LiberarEsquina(x,y)
+      sino
+        Random(x,6,10)
+        Random(y,1,9)
+        BloquearEsquina(x,y)
+        Pos(x,y)
+        juntarpapeles(elementos)
+        Pos(avini,caini)
+        LiberarEsquina(x,y)        
+  fin
+
+areas
+  areaF: AreaPC(1,1,5,10)
+  areaP: AreaPC(6,1,10,9)
+  areaF1: AreaP(6,10,6,10)
+  areaF2: AreaP(7,10,7,10)
+  areaP1: AreaP(8,10,8,10)
+  areaP2: AreaP(9,10,9,10)
+  areaDeposito: AreaC(10,10,10,10)
+
+robots
+  robot florero
+  variables
+    flores,vueltas,fop,avini,caini:numero      
+  comenzar
+    flores:=0
+    vueltas:=5
+    fop:=0
+    avini:=PosAv
+    caini:=PosCa
+    floresopapeles(flores,vueltas,fop,avini,caini)
+    repetir flores
+      BloquearEsquina(10,10)
+      Pos(10,10)
+      depositarFlor
+      Pos(avini,caini)
+      LiberarEsquina(10,10)
+  fin
+  
+  robot papelero
+  variables
+    papeles,vueltas,fop,avini,caini:numero      
+  comenzar
+    papeles:=0
+    vueltas:=3
+    fop:=1
+    avini:=PosAv
+    caini:=PosCa
+    floresopapeles(papeles,vueltas,fop,avini,caini)
+    repetir papeles
+      BloquearEsquina(10,10)
+      Pos(10,10)
+      depositarPapel
+      Pos(avini,caini)
+      LiberarEsquina(10,10)
+  fin
+variables
+  F1:florero
+  F2:florero
+  P1:papelero
+  P2:papelero
+comenzar
+  AsignarArea(F1, areaF)
+  AsignarArea(F1, areaF1)
+  AsignarArea(F1, areaDeposito)
+  AsignarArea(F2, areaF)
+  AsignarArea(F2, areaF2)
+  AsignarArea(F2, areaDeposito)
+  AsignarArea(P1, areaP)
+  AsignarArea(P1, areaP1)
+  AsignarArea(P1,areaDeposito)
+  AsignarArea(P2, areaP)
+  AsignarArea(P2, areaP2)
+  AsignarArea(P2, areaDeposito)
+  Iniciar(F1,6,10)
+  Iniciar(F2,7,10)
+  Iniciar(P1,8,10)
+  Iniciar(P2,9,10)
+fin             

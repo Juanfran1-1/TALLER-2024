@@ -1,0 +1,135 @@
+programa ejercicio6
+procesos
+  proceso juntarpapeles
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+  fin
+  
+  proceso juntarflores
+  comenzar
+    mientras HayFlorEnLaEsquina   
+      tomarFlor
+  fin
+  
+  proceso depositar
+  comenzar
+    si HayFlorEnLaBolsa
+      depositarFlor
+    sino
+      si HayPapelEnLaBolsa
+        depositarPapel
+  fin
+            
+  proceso identificadores
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+  fin
+  
+  proceso posicionaryrecorrer(E ca:numero)
+  comenzar
+    Pos(1,ca)
+    mientras (ca<100) & (HayPapelEnLaBolsa | HayFlorEnLaBolsa)
+      depositar
+      mover
+      ca:= ca + 1
+  fin
+  
+areas
+  areaC1: AreaPC(2,2,8,8)
+  areaC2: AreaPC(5,5,10,10)
+  areaC3: AreaPC(9,9,16,16)
+  areaCALLES: AreaPC(20,1,22,100)
+  areajefe: AreaP(1,1,1,1)
+robots
+  robot c1
+  variables 
+    ca,id:numero
+  comenzar
+    RecibirMensaje(id,rjefe)
+    repetir 4
+      repetir 6
+        juntarflores
+        mover
+      juntarflores
+      derecha 
+    EnviarMensaje(id,rjefe)
+    RecibirMensaje(ca,rjefe)
+    posicionaryrecorrer(ca)
+  fin
+  
+  robot c2 
+    variables 
+    ca,id:numero
+  comenzar
+    RecibirMensaje(id,rjefe)
+    repetir 4
+      repetir 10
+        juntarflores
+        mover
+      juntarflores
+      derecha 
+    EnviarMensaje(id,rjefe)
+    RecibirMensaje(ca,rjefe)
+    posicionaryrecorrer(ca)
+  fin    
+  
+  robot c3
+    variables 
+    ca,id:numero
+  comenzar
+    RecibirMensaje(id,rjefe)
+    repetir 4
+      repetir 7
+        juntarflores
+        mover
+      juntarflores
+      derecha 
+    EnviarMensaje(id,rjefe)
+    RecibirMensaje(ca,rjefe)
+    posicionaryrecorrer(ca)
+  fin    
+  
+  robot jefe
+  variables
+    id,inicial:numero
+  comenzar
+    inicial:=20
+    identificadores
+    repetir 3
+      RecibirMensaje(id,*)      
+      si (id=1)
+        EnviarMensaje(inicial,r1)
+        inicial:=inicial + 1
+      sino
+        si(id=2)        
+          EnviarMensaje(inicial,r2)
+          inicial:=inicial + 1
+        sino
+          EnviarMensaje(inicial,r3)
+          inicial:=inicial+1
+  fin
+variables
+  r1:c1
+  r2:c2
+  r3:c3
+  rjefe:jefe
+comenzar
+  AsignarArea(r1,areaC1)
+  AsignarArea(r1,areaCALLES)
+  AsignarArea(r2,areaC2)
+  AsignarArea(r2,areaCALLES)
+  AsignarArea(r3,areaC3)
+  AsignarArea(r3,areaCALLES)
+  AsignarArea(rjefe,areajefe)
+  Iniciar(r1,2,2)
+  Iniciar(r2,5,5)
+  Iniciar(r3,9,9)
+  Iniciar(rjefe,1,1)
+fin  
+   
+            
+      
+         

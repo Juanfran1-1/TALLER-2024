@@ -1,0 +1,96 @@
+programa ejercicio2
+procesos 
+  proceso depositaryreiniciar(ES p:numero;E av:numero;E ca:numero)
+  comenzar
+    BloquearEsquina(50,50)
+    Pos(50,50)
+    repetir 5
+      depositarPapel
+    Pos(av,ca)
+    LiberarEsquina(50,50)
+    p:=0
+  fin
+areas
+  areap1: AreaP(5,1,5,100)
+  areap2: AreaP(10,1,10,100)
+  areac1: AreaP(11,1,11,1)
+  areac2: AreaP(12,1,12,1)
+  apapeles: AreaC(50,50,50,50)
+  
+robots
+  robot productor
+  variables 
+    p,av,ca:numero
+    seguir:boolean
+  comenzar
+    p:=0
+    av:=PosAv
+    seguir:=V
+    mientras(seguir)
+      si(HayPapelEnLaEsquina)
+        tomarPapel
+        p:=p+1
+        si p = 5
+          ca:=PosCa
+          depositaryreiniciar(p,av,ca)
+      sino 
+        si(PosCa=100)
+          seguir:=F
+        sino 
+          mover
+  fin
+  
+  robot consumidor 
+  variables 
+    p,av,cant,intentos:numero
+  comenzar
+    p:=0
+    intentos:=0
+    av:=PosAv
+    mientras(intentos < 8)
+      Random(cant,2,5)
+      BloquearEsquina(50,50)
+      Pos(50,50)
+      mientras ((HayPapelEnLaEsquina) & (p<cant))
+        tomarPapel
+        p:=p +1
+      si (p <> cant)
+        repetir p
+          depositarPapel   
+      Pos(av,1)
+      LiberarEsquina(50,50)
+      si (p =  cant)
+        repetir p
+          depositarPapel
+      sino 
+        intentos:= intentos + 1
+      p:=0  
+  fin    
+  
+variables 
+  p1,p2:productor
+  c1,c2:consumidor
+comenzar
+  AsignarArea(p1,areap1)
+  AsignarArea(p1,apapeles)
+  AsignarArea(p2,areap2)
+  AsignarArea(p2,apapeles)   
+  AsignarArea(c1,areac1)
+  AsignarArea(c1,apapeles)   
+  AsignarArea(c2,areac2)
+  AsignarArea(c2,apapeles)     
+  Iniciar(p1,5,1)
+  Iniciar(p2,10,1)
+  Iniciar(c1,11,1)
+  Iniciar(c2,12,1)
+fin            
+          
+        
+          
+           
+          
+           
+  
+  
+  
+                

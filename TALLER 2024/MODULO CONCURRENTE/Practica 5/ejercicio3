@@ -1,0 +1,109 @@
+programa ejercicio3
+procesos 
+
+  proceso iradepositar(ES f:numero)
+  variables
+    avact,caact:numero
+  comenzar
+    avact:=PosAv
+    caact:=PosCa
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    mientras (HayFlorEnLaBolsa)
+      depositarFlor
+      f:= f - 1
+    Pos(avact,caact)
+    LiberarEsquina(10,10)
+  fin    
+
+  proceso juntarf(ES f:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+      si (f = 10)
+        iradepositar(f)
+        EnviarMensaje(V,rjefe)
+  fin        
+  
+  proceso recorreryjuntar
+  variables 
+    cantav:numero 
+    f:numero
+  comenzar
+    cantav:=0
+    f:=0
+    repetir 99
+      juntarf(f)
+      cantav:=cantav+1
+      si(cantav = 15) 
+        iradepositar(f)
+        EnviarMensaje(V,rjefe)
+        cantav:=0
+      mover
+    juntarf(f)
+    cantav:=cantav+1
+    si(cantav = 15)
+      iradepositar(f)
+      EnviarMensaje(V,rjefe)
+  fin        
+      
+areas
+  area1 : AreaP(1, 3, 100, 3)
+  area2 : AreaP(1, 4, 100, 4)
+  esquina : AreaC(10, 10, 10, 10)
+  areajefe : AreaP(1, 5, 1, 5)
+robots 
+  robot recolector
+  comenzar 
+    EnviarMensaje(V,rjefe)
+    derecha
+    recorreryjuntar
+    EnviarMensaje(F,rjefe)
+  fin
+  
+  robot cosechador 
+  variables 
+    avini,caini,f:numero 
+    orden:boolean
+    entrabajo1,entrabajo2:boolean
+  comenzar
+    f:=0
+    avini:=PosAv
+    caini:=PosCa
+    RecibirMensaje(entrabajo1,*)
+    RecibirMensaje(entrabajo2,*)
+    mientras (entrabajo1)|(entrabajo2)
+      RecibirMensaje(orden,*)
+      si (orden = V)
+        BloquearEsquina(10, 10)
+        Pos(10, 10)
+        mientras(HayFlorEnLaEsquina)
+          tomarFlor
+          f := f + 1
+        Pos(avini, caini)
+        LiberarEsquina(10, 10)
+      sino 
+        si(entrabajo1 = V)
+          entrabajo1 := F
+        sino
+          si(entrabajo2 = V)
+            entrabajo2 := F
+    Informar(f)
+  fin        
+variables
+  r1 : recolector
+  r2 : recolector
+  rjefe : cosechador
+comenzar
+  AsignarArea(r1, area1)
+  AsignarArea(r2, area2)
+  AsignarArea(r1, esquina)
+  AsignarArea(r2, esquina)
+  AsignarArea(rjefe, esquina)
+  AsignarArea(rjefe, areajefe)
+  Iniciar(r1, 1, 3)
+  Iniciar(r2, 1, 4)
+  Iniciar(rjefe, 1, 5)
+fin            
+    

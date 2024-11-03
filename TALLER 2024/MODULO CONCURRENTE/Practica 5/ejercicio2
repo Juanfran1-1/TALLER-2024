@@ -1,0 +1,130 @@
+programa ejercicio2
+procesos 
+  proceso juntarObjetos(ES o:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      o:=o+1
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      o:=o+1
+  fin
+  
+  proceso moverse(E pasos:numero)
+  variables 
+    o:numero
+    avact,caact:numero
+  comenzar
+    o:=0
+    repetir pasos
+      juntarObjetos(o)
+      mover
+    si (PosAv=100)
+      juntarObjetos(o)
+    avact:=PosAv
+    caact:=PosCa
+    BloquearEsquina(50,50)
+    Pos(50,50)
+    repetir o
+      si(HayPapelEnLaBolsa) & (~HayFlorEnLaBolsa)
+        depositarPapel
+      sino
+        si(HayFlorEnLaBolsa)
+          depositarFlor
+    Pos(avact,caact)
+    LiberarEsquina(50,50)
+  fin
+  
+  proceso identificadores
+  comenzar
+    EnviarMensaje(1, r1)
+    EnviarMensaje(2, r2)
+    EnviarMensaje(3, r3)
+  fin
+  
+areas
+  area1 : AreaP(1, 1, 100, 1)
+  area2 : AreaP(1, 2, 100, 2)
+  area3 : AreaP(1, 3, 100, 3)
+  areajefe : AreaP(1, 4, 1, 4)
+  deposito : AreaC(50, 50, 50, 50)
+robots 
+  robot limpiador
+  variables 
+    listo:boolean
+    id:numero
+  comenzar
+    RecibirMensaje(id,rjefe)
+    derecha
+    moverse(9)
+    si(id = 1)
+      EnviarMensaje(V, r2)
+      EnviarMensaje(V, r3)
+      RecibirMensaje (listo, *)
+      RecibirMensaje (listo, *)
+    sino
+      si(id = 2)
+        EnviarMensaje(V, r1)
+        EnviarMensaje(V, r3)
+        RecibirMensaje(listo, *)
+        RecibirMensaje(listo, *)
+      sino
+        EnviarMensaje(V, r1)
+        EnviarMensaje(V, r2)
+        RecibirMensaje(listo, *)
+        RecibirMensaje(listo, *)
+    repetir 9
+      moverse(10)
+      si(id = 1)
+        EnviarMensaje(V, r2)
+        EnviarMensaje(V, r3)
+        RecibirMensaje(listo, *)
+        RecibirMensaje(listo, *)
+      sino
+        si(id = 2)
+          EnviarMensaje(V, r1)
+          EnviarMensaje(V, r3)
+          RecibirMensaje(listo, *)
+          RecibirMensaje(listo, *)
+        sino
+          EnviarMensaje(V, r1)
+          EnviarMensaje(V, r2)
+          RecibirMensaje(listo, *)
+          RecibirMensaje(listo, *)   
+    EnviarMensaje(V,rjefe)          
+  fin
+  
+  robot jefe
+  variables
+    o:numero 
+    listo:boolean
+  comenzar
+    o:=0
+    identificadores
+    repetir 3
+      RecibirMensaje(listo,*)
+    Pos(50,50)
+    juntarObjetos(o)
+    Informar('OBJETOS JUNTADOS',o)
+  fin 
+variables
+  r1,r2,r3:limpiador 
+  rjefe : jefe
+comenzar
+  AsignarArea(r1, area1)
+  AsignarArea(r2, area2)
+  AsignarArea(r3, area3)
+  AsignarArea(rjefe, areajefe)
+  AsignarArea(r1,deposito)
+  AsignarArea(r2, deposito)
+  AsignarArea(r3, deposito)
+  AsignarArea(rjefe, deposito)
+  Iniciar(r1, 1, 1)
+  Iniciar(r2, 1, 2)
+  Iniciar(r3, 1, 3)
+  Iniciar(rjefe, 1, 4)
+fin        
+                 
+  
+               
+          

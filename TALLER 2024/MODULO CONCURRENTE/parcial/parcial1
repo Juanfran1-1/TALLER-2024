@@ -1,0 +1,171 @@
+programa parcial1
+procesos 
+  proceso juntarf(ES f:numero)  
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f + 1
+  fin
+  
+  proceso juntarp(ES p:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      p:=p + 1
+  fin 
+  proceso bloquearyliberarpapeles(ES p:numero)
+  comenzar 
+    BloquearEsquina(PosAv,PosCa+1)
+    mover
+    juntarp(p)
+    mover
+    LiberarEsquina(PosAv,PosCa-1)
+    juntarp(p)
+  fin   
+  proceso bloquearyliberarflores(ES f:numero)
+  comenzar 
+    BloquearEsquina(PosAv+1,PosCa)
+    mover
+    juntarf(f)
+    mover
+    LiberarEsquina(PosAv-1,PosCa)
+    juntarf(f)
+  fin   
+  
+  proceso recorrerca(ES f:numero)
+  comenzar
+    derecha
+    repetir 4
+      juntarf(f)
+      mover
+    juntarf(f)   
+    bloquearyliberarflores(f)
+    repetir 4
+      mover
+      juntarf(f)
+  fin           
+  proceso recorrerav(ES p:numero)
+  comenzar
+    repetir 7
+      juntarp(p)
+      mover
+    juntarp(p)  
+    bloquearyliberarpapeles(p)
+    repetir 11
+      mover
+      juntarp(p)         
+  fin
+  
+  proceso identificar
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(4,r4)
+  fin 
+  
+  proceso conocercantidades(ES Oa:numero;ES Ov:numero)
+  variables
+    id,aux:numero
+  comenzar
+    repetir 4
+      RecibirMensaje(id,*)
+      si(id=1)
+        RecibirMensaje(aux,r1)
+        Oa:= Oa + aux
+      sino 
+        si(id=2)
+          RecibirMensaje(aux,r2)
+          Oa:= Oa + aux  
+        sino 
+          si(id=3)    
+            RecibirMensaje(aux,r3)
+            Ov:= Ov + aux 
+          sino
+            RecibirMensaje(aux,r4)
+            Ov:=Ov + aux
+  fin
+  
+  proceso conocerganador(E Oa:numero;E Ov:numero)
+  comenzar
+    si(Oa > Ov)
+      Informar('Ganador equipo azul',Oa)
+    sino 
+      si(Oa < Ov)
+        Informar('Ganador equipo verde',Ov)
+      sino 
+        Informar('Empate',Oa - Ov)
+  fin
+                            
+areas
+  areaverde: AreaPC(16,4,26,24) 
+  areaazul: AreaPC(2,4,12,24)
+  areajefe: AreaC(14,12,14,12)  
+robots 
+  robot equipoazul
+  variables 
+    id,f,p:numero
+  comenzar
+    f:=0
+    p:=0
+    RecibirMensaje(id,rjefe)
+    si(id=1)
+      recorrerca(f)
+      EnviarMensaje(id,rjefe)
+      EnviarMensaje(f,rjefe)
+    sino
+      si (id = 2)
+        recorrerav(p)
+        EnviarMensaje(id,rjefe)
+        EnviarMensaje(p,rjefe)
+  fin 
+  
+  robot equipoverde
+  variables 
+    id,f,p:numero
+  comenzar
+    f:=0
+    p:=0
+    RecibirMensaje(id,rjefe)
+    si(id=3)
+      recorrerca(f)
+      EnviarMensaje(id,rjefe)
+      EnviarMensaje(f,rjefe)
+    sino
+      si(id=4) 
+        recorrerav(p)
+        EnviarMensaje(id,rjefe)
+        EnviarMensaje(p,rjefe)
+  fin      
+  
+  robot jefe
+  variables 
+    Oa,Ov:numero
+  comenzar
+    Oa:=0
+    Ov:=0
+    identificar
+    conocercantidades(Oa,Ov)
+    conocerganador(Oa,Ov)    
+  fin
+  
+variables 
+  r1,r2:equipoazul        
+  r3,r4:equipoverde
+  rjefe: jefe
+comenzar
+  AsignarArea(r1,areaazul) 
+  AsignarArea(r2,areaazul) 
+  AsignarArea(r3,areaverde)
+  AsignarArea(r4,areaverde)
+  AsignarArea(rjefe,areajefe)
+  Iniciar(r1,2,12) 
+  Iniciar(r2,7,4)
+  Iniciar(r3,16,12)
+  Iniciar(r4,21,4)
+  Iniciar(rjefe,14,12)
+fin         
+         
+            
+    
+                      

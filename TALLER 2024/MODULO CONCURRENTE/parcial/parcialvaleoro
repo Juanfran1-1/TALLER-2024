@@ -1,0 +1,152 @@
+programa parcial3
+procesos 
+  proceso esconder
+  variables 
+    av,ca,avini,caini:numero
+  comenzar
+    avini:=PosAv
+    caini:=PosCa
+    Random(av,10,13)
+    Random(ca,10,13)
+    Pos(av,ca)
+    depositarFlor
+    Pos(avini,caini)
+  fin
+  
+  proceso identificar
+  comenzar 
+    EnviarMensaje(1,r1)  
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+  fin
+  
+  proceso enviaracceso
+  comenzar 
+    EnviarMensaje(V,r1)    
+    EnviarMensaje(V,r2)
+    EnviarMensaje(V,r3)
+  fin
+  
+                       
+  
+  proceso bloquearybuscar(ES av:numero;ES ca:numero)
+  variables
+    avini,caini:numero
+  comenzar 
+    caini:=PosAv
+    avini:=PosCa
+    BloquearEsquina(av,ca)  
+    Pos(av,ca)  
+    si(HayFlorEnLaEsquina)
+      tomarFlor
+    Pos(avini,caini)    
+    LiberarEsquina(av,ca)
+  fin
+  
+areas
+  areajefe: AreaP(1,1,1,1)  
+  areab1: AreaP(2,2,2,2)
+  areab2:AreaP(3,3,3,3)
+  areab3:AreaP(4,4,4,4)
+  cuadrante:AreaC(10,10,13,13)  
+robots
+  robot buscador1
+  variables 
+    id,av,ca:numero
+    acceso,gane,info2,info3:boolean
+  comenzar
+    RecibirMensaje(id,rjefe)    
+    RecibirMensaje(acceso,rjefe) 
+    gane:=F   
+    mientras (acceso)
+      Random(av,10,13)
+      Random(ca,10,13) 
+      bloquearybuscar(av,ca)
+      si (HayFlorEnLaBolsa)
+        gane:=V
+      EnviarMensaje(gane,r2)
+      EnviarMensaje(gane,r3)  
+      RecibirMensaje(info2,r2)
+      RecibirMensaje(info3,r3)
+      si ((gane)|(info2)|(info3))
+        acceso:=F   
+    si(gane)
+      EnviarMensaje(id,rjefe)
+                  
+  fin
+  robot buscador2 
+  variables 
+    id,av,ca:numero
+    acceso,gane,info2,info3:boolean
+  comenzar
+    RecibirMensaje(id,rjefe)    
+    RecibirMensaje(acceso,rjefe) 
+    gane:=F   
+    mientras (acceso)
+      Random(av,10,13)
+      Random(ca,10,13) 
+      bloquearybuscar(av,ca)
+      si (HayFlorEnLaBolsa)
+        gane:=V
+      EnviarMensaje(gane,r1)
+      EnviarMensaje(gane,r3)  
+      RecibirMensaje(info2,r1)
+      RecibirMensaje(info3,r3)
+      si ((gane)|(info2)|(info3))
+        acceso:=F   
+    si(gane)
+      EnviarMensaje(id,rjefe)
+                  
+  fin
+  robot buscador3 
+  variables 
+    id,av,ca:numero
+    acceso,gane,info2,info3:boolean
+  comenzar
+    RecibirMensaje(id,rjefe)    
+    RecibirMensaje(acceso,rjefe) 
+    gane:=F   
+    mientras (acceso)
+      Random(av,10,13)
+      Random(ca,10,13) 
+      bloquearybuscar(av,ca)
+      si (HayFlorEnLaBolsa)
+        gane:=V
+      EnviarMensaje(gane,r1)
+      EnviarMensaje(gane,r2)  
+      RecibirMensaje(info2,r1)
+      RecibirMensaje(info3,r2)
+      si ((gane)|(info2)|(info3))
+        acceso:=F   
+    si(gane)
+      EnviarMensaje(id,rjefe)                  
+  fin 
+  robot jefe 
+  variables
+    ganador:numero
+  comenzar
+    identificar
+    esconder
+    enviaracceso
+    RecibirMensaje(ganador,*)  
+    Informar('ganador rbt',ganador)
+  fin  
+variables 
+  r1:buscador1
+  r2:buscador2
+  r3:buscador3
+  rjefe:jefe
+comenzar
+  AsignarArea(r1,areab1)
+  AsignarArea(r2,areab2)  
+  AsignarArea(r3,areab3)  
+  AsignarArea(rjefe,areajefe)
+  AsignarArea(r1,cuadrante)    
+  AsignarArea(r2,cuadrante)  
+  AsignarArea(r3,cuadrante)  
+  AsignarArea(rjefe,cuadrante) 
+  Iniciar(r1,2,2)
+  Iniciar(r2,3,3)
+  Iniciar(r3,4,4)
+  Iniciar(rjefe,1,1)
+fin     

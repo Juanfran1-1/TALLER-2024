@@ -1,0 +1,61 @@
+programa 
+procesos 
+  proceso esconder
+  variables 
+    av,ca,avini,caini:numero
+  comenzar
+    avini:PosAv
+    caini:PosCa
+    Random(av,10,13)
+    Random(ca,10,13)
+    Pos(av,ca)
+    depositarPapel
+    Pos(avini,caini)
+  fin
+  
+  proceso identificar
+  comenzar 
+    EnviarMensaje(1,r1)  
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+  fin
+  
+  proceso enviaracceso
+  comenzar 
+    EnviarMensaje(V,r1)    
+    EnviarMensaje(V,r2)
+    EnviarMensaje(V,r3)
+  fin
+  
+  proceso finalizar
+  comenzar
+    RecibirMensaje(F,r1)
+    RecibirMensaje(F,r2)
+    RecibirMensaje(F,r3)
+  fin 
+  
+  proceso comprobareir
+  variables
+    av,ca,aux,aux2,r:numero
+  comenzar 
+    r:=0
+    repetir 3
+      Random(av,10,13)
+      r:=r+1
+      si(r=1)
+        EnviarMensaje(av,r1)
+      sino  
+        si(r=2)
+          EnviarMensaje(av,r2)
+        sino
+          EnviarMensaje(av,r3)
+      Random(ca,10,13)
+      si(r=1)
+        EnviarMensaje(ca,r1)
+        aux:=x
+      sino  
+        si(r=2)
+          si(aux=ca) 
+            EnviarMensaje(ca,r2)
+        sino
+          EnviarMensaje(ca,r3)          

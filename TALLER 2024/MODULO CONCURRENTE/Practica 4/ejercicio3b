@@ -1,13 +1,10 @@
 programa ejercicio3
 procesos
-  proceso tomarpapel(ES p:numero;E N:numero;E id:numero)
+  proceso tomarpapel(ES p:numero;E N:numero)
   comenzar
-    si(HayPapelEnLaEsquina)
-      mientras(HayPapelEnLaEsquina) & (p<N)
-        tomarPapel
-        p:=p+1
-      si (p=N) & (PosCa<99)
-        enviaryrecibirfinalizacion(id)
+    mientras(HayPapelEnLaEsquina) & (p<N)
+      tomarPapel
+      p:=p+1
   fin
   proceso enviaryrecibirfinalizacion(E id:numero)
   variables
@@ -39,16 +36,26 @@ areas
 robots 
   robot limpiador
   variables 
-    id,N,f:numero
+    id,N,p:numero
     listo:boolean
   comenzar
-    f:=0
+    p:=0
     RecibirMensaje(id,Rfiscalizador)
-    mientras (PosCa < 99)
+    mientras (PosCa < 100)
       Random(N,1,5)
-      mientras(N <> f) & (PosCa < 99)
-        tomarpapel(f,N,id) 
-        mover   
+      Informar('RANDOM',N)
+      mientras(N <> p) & (PosCa < 100)
+        tomarpapel(p,N)    
+        si (p=N)
+          enviaryrecibirfinalizacion(id) 
+          p:=0
+          si(PosCa < 99)
+            Random(N,1,5)
+            Informar('RANDOM',N)
+        si(HayPapelEnLaEsquina)
+          tomarpapel(p,N)     
+        mover  
+    enviaryrecibirfinalizacion(id)     
     Informar('TERMINADO',listo)          
   fin
   

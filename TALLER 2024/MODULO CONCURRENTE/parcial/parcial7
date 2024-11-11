@@ -1,0 +1,97 @@
+programa parcial 
+procesos 
+  proceso juntarf(ES f:numero)
+  comenzar 
+    mientras (HayFlorEnLaEsquina)      
+      tomarFlor 
+      f:=f+1
+  fin 
+  proceso generaryenviar
+  variables 
+    ca:numero
+  comenzar 
+    Random(ca,2,50)
+    EnviarMensaje(ca,F1)
+    EnviarMensaje(ca,F2)
+  fin
+  proceso identificar
+  comenzar
+    EnviarMensaje(1, F1)
+    EnviarMensaje(2, F2)
+  fin      
+areas
+  area: AreaC(1,1,100,100)
+robots 
+  robot corredor1
+  variables 
+    f,ca,id:numero
+  comenzar 
+    f:=0
+    RecibirMensaje(id,rjefe)
+    RecibirMensaje(ca,rjefe)
+    juntarf(f)
+    repetir 60 
+      si(PosCa = (ca - 1))
+        BloquearEsquina(PosAv,PosCa+1)
+        EnviarMensaje(id,rjefe)
+        mover 
+        juntarf(f)
+        mover 
+        LiberarEsquina(PosAv,PosCa-1)
+        juntarf(f)
+      sino 
+        mover 
+        juntarf(f)  
+    EnviarMensaje(f,rjefe)       
+  fin 
+  
+  robot corredor2
+  variables 
+    f,ca,id:numero
+  comenzar
+    f:=0
+    derecha
+    RecibirMensaje(id,rjefe)
+    RecibirMensaje(ca,rjefe)
+    Pos(1,ca)
+    juntarf(f)
+    repetir 60 
+      si(PosAv = 5)
+        BloquearEsquina(PosAv+1,PosCa)
+        EnviarMensaje(id,rjefe)
+        mover 
+        juntarf(f)
+        mover 
+        LiberarEsquina(PosAv-1,PosCa)
+        juntarf(f)
+      sino 
+        mover
+        juntarf(f)
+    EnviarMensaje(f,rjefe)        
+  fin     
+  robot jefe
+  variables 
+    id,f:numero 
+  comenzar 
+    identificar
+    generaryenviar
+    RecibirMensaje(id,*)
+    si(id=1)
+      RecibirMensaje(f,F1)
+      Informar('GANADOR',id)
+    sino 
+      RecibirMensaje(f,F2)
+      Informar('GANADOR',id)
+  fin 
+variables
+  F1:corredor1
+  F2:corredor2
+  rjefe:jefe
+comenzar 
+  AsignarArea(F1,area)       
+  AsignarArea(F2,area)
+  AsignarArea(rjefe,area)
+  Iniciar(F1,6,1)
+  Iniciar(F2,1,2)
+  Iniciar(rjefe,100,100)
+fin      

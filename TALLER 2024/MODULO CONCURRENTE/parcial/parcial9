@@ -1,0 +1,126 @@
+programa parcial 
+procesos 
+  proceso juntarf(ES f:numero)
+  comenzar 
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor 
+      f:=f+1
+  fin 
+  proceso depositarf
+  variables 
+    av,ca:numero 
+  comenzar 
+    av:=PosAv
+    ca:=PosCa
+    mientras (HayFlorEnLaBolsa)
+      BloquearEsquina(25,25)
+      Pos(25,25)
+      depositarFlor
+      Pos(av,ca)
+      LiberarEsquina(25,25)
+  fin
+       
+  proceso rectangulo(E alto:numero;E ancho:numero;ES f:numero)
+  comenzar 
+    repetir 2 
+      repetir alto 
+        juntarf(f)
+        mover 
+      juntarf(f)
+      depositarf
+      derecha 
+      repetir ancho
+        mover 
+        juntarf(f)
+      derecha 
+      depositarf
+  fin 
+  
+  proceso generaryenviar
+  variables 
+    alto,ancho,c:numero
+  comenzar 
+    c:=1
+    repetir 3  
+      Random(alto,1,10)
+      Random(ancho,1,5)
+      si(c=1)
+        EnviarMensaje(alto,r1)
+        EnviarMensaje(ancho,r1)
+      sino 
+        si(c=2)
+          EnviarMensaje(alto,r2)
+          EnviarMensaje(ancho,r2)
+        sino 
+          EnviarMensaje(alto,r3)
+          EnviarMensaje(ancho,r3)    
+      c:=c+1
+  fin 
+  
+  proceso recibirycalcular(ES idmax:numero)
+  variables 
+    aux,max,id:numero
+  comenzar 
+    max:=-1
+    repetir 3
+      RecibirMensaje(id,*)
+      si(id=1)
+        RecibirMensaje(aux,r1)
+      sino 
+        si(id=2)
+          RecibirMensaje(aux,r2)
+        sino 
+          RecibirMensaje(aux,r3)
+    si(max < aux)
+      max:=aux
+      idmax:=id
+  fin 
+                      
+  proceso identificar
+  comenzar
+    EnviarMensaje(1, r1)
+    EnviarMensaje(2, r2)
+    EnviarMensaje(3, r3)
+  fin
+        
+    
+  
+areas
+  area: AreaC(1,1,100,100)
+robots 
+  robot geometrico
+  variables 
+    f,id,alto,ancho:numero 
+  comenzar 
+    f:=0
+    RecibirMensaje(id,rjefe)
+    RecibirMensaje(alto,rjefe)
+    RecibirMensaje(ancho,rjefe)
+    rectangulo(alto,ancho,f)
+    EnviarMensaje(id,rjefe)
+    EnviarMensaje(f,rjefe)
+  fin
+  
+  robot jefe
+  variables 
+    idmax:numero 
+  comenzar 
+    idmax:=0
+    identificar 
+    generaryenviar 
+    recibirycalcular(idmax)
+    Informar('El rbt que mas junto fue el',idmax)
+  fin 
+variables 
+  r1,r2,r3:geometrico
+  rjefe:jefe
+comenzar 
+  AsignarArea(r1,area)   
+  AsignarArea(r2,area)
+  AsignarArea(r3,area)
+  AsignarArea(rjefe,area)
+  Iniciar(r1,1,1)
+  Iniciar(r2,7,1)
+  Iniciar(r3,13,1)
+  Iniciar(rjefe,24,24)
+fin        

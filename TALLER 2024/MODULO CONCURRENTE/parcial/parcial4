@@ -1,0 +1,103 @@
+programa parcial4
+procesos
+  proceso juntarf(ES f:numero)
+  comenzar 
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:= f + 1
+  fin 
+  
+  proceso cuadrado(E tamaño:numero)
+  variables
+    f:numero
+  comenzar
+    f:=0
+    repetir 4 
+      repetir tamaño
+        juntarf(f)
+        mover 
+      juntarf(f)
+      derecha 
+  fin 
+  
+  proceso depositar
+  variables 
+    avini,caini:numero
+  comenzar 
+    avini:=PosAv
+    caini:=PosCa
+    mientras (HayFlorEnLaBolsa)
+      BloquearEsquina(50,50)  
+      Pos(50,50)
+      depositarFlor
+      Pos(avini,caini)
+      LiberarEsquina(50,50)
+  fin         
+  
+  proceso identificar
+  comenzar 
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+  fin  
+areas
+  arear1: AreaP(1,1,6,18)
+  arear2: AreaP(8,1,13,18)
+  arear3: AreaP(15,1,20,18)
+  areajefe: AreaP(22,1,22,1)
+  esquina: AreaC(50,50,50,50)
+robots 
+  robot cliente
+  variables 
+    id,tamaño:numero
+  comenzar       
+    RecibirMensaje(id,rjefe)
+    repetir 3
+      EnviarMensaje(id,rjefe)
+      RecibirMensaje(tamaño,rjefe)
+      cuadrado(tamaño)
+      Pos(PosAv,PosCa+1+tamaño)
+    depositar
+    EnviarMensaje(V,rjefe)
+  fin
+  
+  robot jefe 
+  variables 
+    id,f,tamaño:numero
+    listo:boolean
+  comenzar
+    identificar 
+    f:=0
+    repetir 9
+      RecibirMensaje(id,*)
+      Random(tamaño,1,5)
+      si(id=1)
+        EnviarMensaje(tamaño,r1)
+      sino
+        si(id=2)
+          EnviarMensaje(tamaño,r2)
+        sino 
+          EnviarMensaje(tamaño,r3)
+    repetir 3
+      RecibirMensaje(listo,*)
+    Pos(50,50)
+    juntarf(f)
+    Informar('FLORES TOTALES',f)
+  fin                    
+variables 
+  r1,r2,r3:cliente
+  rjefe:jefe
+comenzar 
+  AsignarArea(r1,arear1) 
+  AsignarArea(r2,arear2) 
+  AsignarArea(r3,arear3) 
+  AsignarArea(rjefe,areajefe)
+  AsignarArea(r1,esquina) 
+  AsignarArea(r2,esquina) 
+  AsignarArea(r3,esquina) 
+  AsignarArea(rjefe,esquina)
+  Iniciar(r1,1,1)
+  Iniciar(r2,8,1)
+  Iniciar(r3,15,1)
+  Iniciar(rjefe,22,1)
+fin          

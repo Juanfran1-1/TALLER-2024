@@ -1,0 +1,134 @@
+programa parcial 
+procesos 
+  proceso juntarp(ES c:numero;ES p:numero)  
+  comenzar 
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      c:=c + 1
+      p:=p + 1
+  fin 
+  
+  proceso izquierda
+  comenzar 
+    repetir 3
+      derecha
+  fin 
+        
+  proceso escalon(ES altura:numero;ES ancho:numero;ES p:numero;ES c:numero)
+  comenzar 
+    repetir altura 
+      juntarp(p,c)
+      mover 
+    derecha 
+    depositar(p)
+    repetir ancho 
+      juntarp(p,c)
+      mover 
+    depositar(p)  
+    izquierda   
+  fin 
+  
+  proceso depositar(ES p:numero)
+  variables 
+    av,ca:numero
+  comenzar 
+    av:=PosAv
+    ca:=PosCa   
+    repetir p
+      BloquearEsquina(99,99)
+      Pos(99,99)
+      depositarPapel 
+      Pos(av,ca)
+      LiberarEsquina(99,99)  
+    p:=0   
+  fin      
+  
+  proceso identificar
+  comenzar
+    EnviarMensaje(1, r1)
+    EnviarMensaje(2, r2)
+    EnviarMensaje(3, r3)
+  fin  
+  
+  proceso avisar
+  comenzar 
+    EnviarMensaje(V,r2)
+    EnviarMensaje(V,r3)
+    EnviarMensaje(V,r1)
+  fin 
+  
+  proceso termino
+  variables 
+    listo:boolean
+  comenzar 
+    repetir 3
+      RecibirMensaje(listo,*)
+  fin
+        
+  proceso calcularesquinas(ES c:numero)
+  variables 
+    aux:numero
+  comenzar 
+    repetir 3
+      RecibirMensaje(aux,*)
+      c:=c+aux
+  fin 
+      
+  proceso irajuntar
+  variables 
+    av,ca:numero 
+  comenzar 
+    av:=PosAv
+    ca:=PosCa
+    Pos(99,99)
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+    Pos(av,ca)
+  fin 
+        
+areas
+  area: AreaC(1,1,100,100)
+robots 
+  robot geometrico 
+  variables 
+    p,c,id,alto,ancho:numero
+    seguir:boolean
+  comenzar 
+    p:=0
+    c:=0
+    RecibirMensaje(id,rjefe)
+    repetir 4
+      Random(alto,1,3)
+      Random(ancho,2,4)
+      escalon(alto,ancho,p,c)
+      EnviarMensaje(V,rjefe)
+      RecibirMensaje(seguir,rjefe)
+    EnviarMensaje(c,rjefe) 
+  fin
+  
+  robot jefe 
+  variables 
+    cantesquinas:numero
+  comenzar 
+    identificar 
+    repetir 4
+      termino
+      avisar
+    calcularesquinas(cantesquinas)
+    irajuntar
+    Informar('CANTIDAD TOTAL ENTRE LOS ROBOTS',cantesquinas)
+  fin                  
+      
+variables 
+  r1,r2,r3:geometrico
+  rjefe:jefe
+comenzar 
+  AsignarArea(r1,area)   
+  AsignarArea(r2,area)
+  AsignarArea(r3,area)
+  AsignarArea(rjefe,area)
+  Iniciar(r1,2,1)
+  Iniciar(r2,32,1)
+  Iniciar(r3,62,1)
+  Iniciar(rjefe,1,1)
+fin        

@@ -1,0 +1,126 @@
+programa parcial2
+procesos 
+  proceso tomarf(ES f:numero)
+  comenzar 
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:= f + 1 
+  fin 
+  
+  proceso tomarp 
+  comenzar 
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+  fin 
+  
+  proceso recorreravenidaflores(ES f:numero)
+  comenzar 
+    repetir 9
+      tomarf(f)
+      mover
+    tomarf(f)
+  fin                
+    
+  proceso recorreravenidapapeles
+  comenzar 
+    repetir 9
+      tomarp
+      mover
+    tomarp
+  fin               
+  
+  proceso maximo(ES idmax1:numero;ES idmax2:numero)
+  variables 
+    id,f,max1,max2:numero
+  comenzar 
+    max1:=-1
+    max2:=-1
+    repetir 3
+      RecibirMensaje(id,*)
+      si(id=1)
+        RecibirMensaje(f,r1)
+      sino 
+        si(id=2)
+          RecibirMensaje(f,r2)
+        sino 
+          RecibirMensaje(f,r3)
+      si(f>max1)
+        max2:=max1
+        idmax2:=idmax1
+        max1:=f
+        idmax1:=id
+      sino 
+        si (f>max2)
+          max2:=f
+          idmax2:=id
+  fin                          
+  
+  proceso siguienteEtapa(E idmax1:numero;E idmax2:numero)
+  comenzar
+    EnviarMensaje(idmax1,r1)
+    EnviarMensaje(idmax2,r1)
+    EnviarMensaje(idmax1,r2)
+    EnviarMensaje(idmax2,r2)
+    EnviarMensaje(idmax1,r3)
+    EnviarMensaje(idmax2,r3)
+  fin
+  proceso identificar
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+  fin   
+areas
+  arear1: AreaP(5,1,5,10)
+  arear2: AreaP(6,1,6,10)
+  arear3: AreaP(7,1,7,10)
+  areajefe: AreaP(1,1,1,1)
+robots 
+  robot limpiador 
+  variables 
+    id,f,avini,caini,idmax1,idmax2:numero
+  comenzar 
+    RecibirMensaje(id,rjefe)
+    avini:=PosAv
+    caini:=PosCa
+    f:=0
+    recorreravenidaflores(f)
+    EnviarMensaje(id,rjefe)
+    EnviarMensaje(f,rjefe)
+    RecibirMensaje(idmax1,rjefe)
+    RecibirMensaje(idmax2,rjefe)
+    si (idmax1 = id) | (idmax2 = id)
+      Pos(avini,caini)
+      recorreravenidapapeles  
+      EnviarMensaje(id,rjefe)
+  fin
+  
+  robot jefe
+  variables 
+    idmax1,idmax2,ganador:numero
+  comenzar 
+    idmax1:=0
+    idmax2:=0
+    identificar
+    maximo(idmax1,idmax2)
+    siguienteEtapa(idmax1,idmax2)     
+    RecibirMensaje(ganador,*)
+    Informar('GANADOR ROBOT',ganador)
+  fin
+variables 
+  r1,r2,r3:limpiador
+  rjefe:jefe
+comenzar
+  AsignarArea(r1,arear1)
+  AsignarArea(r2,arear2)
+  AsignarArea(r3,arear3)
+  AsignarArea(rjefe,areajefe)
+  Iniciar(r1,5,1)
+  Iniciar(r2,6,1)
+  Iniciar(r3,7,1)
+  Iniciar(rjefe,1,1)
+fin       
+       
+      
+     
+      

@@ -1,0 +1,169 @@
+programa parcial 
+procesos 
+  proceso juntarf(ES f:numero)
+  comenzar 
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin 
+  
+  proceso depositarf
+  variables 
+    avini,caini:numero
+  comenzar
+    avini:=PosAv
+    caini:=PosCa
+    mientras(HayFlorEnLaBolsa) 
+      BloquearEsquina(20,20)
+      Pos(20,20)
+      depositarFlor
+      Pos(avini,caini)     
+      LiberarEsquina(20,20)
+  fin
+  
+  proceso etapas(ES f:numero)
+  comenzar 
+    repetir 9
+      juntarf(f)
+      mover 
+    juntarf(f)
+  fin 
+  
+          
+  proceso avisar(E id:numero)
+  comenzar 
+    si(id=1)
+      EnviarMensaje(V,A2)
+    sino  
+      si(id=3)
+        EnviarMensaje(V,V2)  
+  fin    
+  
+  proceso acceso(E id:numero)  
+  variables 
+    listo:boolean
+  comenzar 
+    si(id=2)
+      RecibirMensaje(listo,A1)
+    sino
+      si(id=4) 
+        RecibirMensaje(listo,V1)  
+  fin  
+  
+  proceso identificar
+  comenzar
+    EnviarMensaje(1, A1)
+    EnviarMensaje(2, A2)
+    EnviarMensaje(3, V1)
+    EnviarMensaje(4, V2)
+  fin
+  
+  proceso recibirycontar(ES fA:numero;ES fV:numero)
+  variables 
+    id,aux:numero
+  comenzar 
+    RecibirMensaje(id,*)
+    si (id=1)
+      RecibirMensaje(aux,A1)
+      fA:=aux+fA
+    sino 
+      si (id=2)
+        RecibirMensaje(aux,A2)
+        fA:=aux+fA
+      sino 
+        si(id=3)
+          RecibirMensaje(aux,V1)
+          fV:=aux+fV
+        sino 
+          RecibirMensaje(aux,V2)
+          fV:=aux+fV         
+  fin
+  proceso informarganador(E fA:numero; E fV:numero)
+  comenzar
+    si(fA>fV)
+      Informar('Ganador equipo azul',fA)
+    sino
+      si(fA <fV)
+        Informar('Ganador equipo verde',fV)
+      sino 
+        Informar('EMPATE',fA - fV)
+  fin 
+  proceso correr1(ES f:numero)
+  comenzar 
+    etapas(f)
+    derecha 
+    etapas(f)
+    juntarf(f)
+  fin
+  proceso correr2(ES f:numero;E id:numero) 
+  comenzar
+    repetir 2 
+      derecha 
+    acceso(id)
+    etapas(f)
+    derecha
+    etapas(f)
+  fin                         
+areas
+  areaA: AreaPC(1,1,11,10)
+  areaV: AreaPC(13,1,23,10)
+  esquina: AreaPC(20,20,20,20)
+  areajefe: AreaP(30,1,30,1)
+robots 
+  robot corredor1
+  variables 
+    f,id:numero 
+  comenzar  
+    f:=0
+    RecibirMensaje(id,rjefe)
+    correr1(f)
+    avisar(id)
+    depositarf
+    EnviarMensaje(id,rjefe)
+    EnviarMensaje(f,rjefe)
+  fin 
+  
+  robot corredor2
+  variables 
+    f,id:numero 
+  comenzar  
+    f:=0
+    RecibirMensaje(id,rjefe)
+    correr2(f,id)
+    depositarf 
+    EnviarMensaje(id,rjefe)
+    EnviarMensaje(f,rjefe)
+  fin 
+  
+  robot jefe
+  variables 
+    fA,fV:numero
+  comenzar 
+    identificar  
+    repetir 4
+      recibirycontar(fA,fV)
+    informarganador(fA,fV)
+  fin
+variables 
+  A1,V1:corredor1
+  A2,V2:corredor2
+  rjefe:jefe
+comenzar
+  AsignarArea(A1,areaA) 
+  AsignarArea(A2,areaA)
+  AsignarArea(V1,areaV)
+  AsignarArea(V2,areaV)
+  AsignarArea(A1,esquina) 
+  AsignarArea(A2,esquina)
+  AsignarArea(V1,esquina)
+  AsignarArea(V2,esquina)
+  AsignarArea(rjefe,areajefe)
+  Iniciar(A1,1,1)
+  Iniciar(A2,11,10)
+  Iniciar(V1,13,1)
+  Iniciar(V2,23,10)
+  Iniciar(rjefe,30,1)
+fin  
+            
+      
+          

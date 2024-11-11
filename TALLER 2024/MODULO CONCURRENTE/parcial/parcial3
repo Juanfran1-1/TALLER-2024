@@ -1,0 +1,147 @@
+programa parcial3 
+procesos 
+  proceso juntarf(ES f:numero)
+  comenzar 
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f + 1
+  fin 
+  
+  proceso juntarp(ES p:numero)
+  comenzar 
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      p:= p + 1    
+  fin 
+  
+  proceso bloquearenida(ES f:numero;E id:numero)
+  comenzar 
+    BloquearEsquina(6,6)
+    Pos(6,6)
+    si(HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f +1
+    si(id=1)
+      Pos(PosAv+1,PosCa-1)
+    sino
+      Pos(PosAv+1,PosCa+1)  
+    LiberarEsquina(6,6)
+  fin  
+  
+  proceso recorrerida(ES f:numero;E id:numero)
+  comenzar
+    repetir 4
+      juntarf(f)
+      mover 
+    juntarf(f)
+    bloquearenida(f,id)
+    repetir 4
+      juntarf(f)
+      mover
+    juntarf(f)
+  fin
+ 
+ 
+  proceso bloquearenvuelta(ES p:numero;E id:numero)
+  comenzar 
+    BloquearEsquina(6,6)
+    Pos(6,6)
+    si(HayPapelEnLaEsquina)
+      tomarPapel
+      p:=p +1
+    si(id=1)
+      Pos(PosAv-1,PosCa+1)
+    sino
+      Pos(PosAv-1,PosCa-1)  
+    LiberarEsquina(6,6)
+  fin      
+  proceso recorrervuelta(ES p:numero;E id:numero)
+  comenzar
+    repetir 4
+      juntarp(p)
+      mover 
+    juntarp(p)
+    bloquearenvuelta(p,id)
+    repetir 4
+      juntarp(p)
+      mover
+    juntarp(p)
+  fin
+  
+  proceso recibirymax(ES idmax:numero)
+  variables 
+    id,aux,max:numero
+  comenzar 
+    max:=-1
+    repetir 2
+      RecibirMensaje(id,*)
+      si(id=1)
+        RecibirMensaje(aux,r1)
+      sino 
+        RecibirMensaje(aux,r2)
+      si ( max < aux)
+        idmax:=id
+        max:=aux
+  fin   
+  
+  proceso identificar
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+  fin
+         
+areas
+  areac2e1:AreaP(1,5,5,5)
+  areac2e2:AreaP(7,7,11,7) 
+  areac1e1:AreaP(1,7,5,7)
+  areac1e2:AreaP(7,5,11,5)  
+  esquina: AreaPC(6,6,6,6)
+  areaj: AreaP(1,6,1,6)          
+robots 
+  robot corredor
+  variables 
+    id,f,p:numero 
+  comenzar
+    f:=0
+    p:=0
+    derecha
+    RecibirMensaje(id,rjefe)
+    recorrerida(f,id)  
+    EnviarMensaje(id,rjefe)
+    EnviarMensaje(f,rjefe)
+    repetir 2
+      derecha
+    recorrervuelta(p,id)
+    EnviarMensaje(id,rjefe)
+    EnviarMensaje(p,rjefe)
+  fin 
+  
+  robot jefe 
+  variables 
+    id:numero
+  comenzar 
+    identificar 
+    recibirymax(id)
+    Informar('GANADOR DE IDA',id)
+    recibirymax(id)
+    Informar('GANADOR VUELTA',id)
+  fin    
+
+variables 
+  r1,r2:corredor 
+  rjefe:jefe
+comenzar 
+  AsignarArea(r1,areac1e1)  
+  AsignarArea(r1,areac1e2)   
+  AsignarArea(r2,areac2e1)   
+  AsignarArea(r2,areac2e2)     
+  AsignarArea(r1,esquina)   
+  AsignarArea(r2,esquina)   
+  AsignarArea(rjefe,areaj)   
+  Iniciar(r1,1,7)
+  Iniciar(r2,1,5)
+  Iniciar(rjefe,1,6)
+fin      
+      
+    
+       

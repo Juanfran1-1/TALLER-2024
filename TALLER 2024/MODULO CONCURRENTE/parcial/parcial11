@@ -1,0 +1,158 @@
+programa parcial
+procesos 
+  proceso juntarf(ES f:numero)  
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor 
+      f:=f+1
+  fin 
+  
+  proceso identificar
+  comenzar 
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+  fin 
+  
+  
+  proceso recibirycalcular(E c1:numero;E c2:numero;E c3:numero;ES idmax:numero)
+  comenzar 
+    si((c1>=c2)&(c1>=c3))
+      idmax:=1
+    sino
+      si (c2 >= c1) & (c2>= c3)
+        idmax:= 2
+      sino
+        idmax:= 3         
+  fin
+  
+  proceso cuadrado(E tamaño:numero;ES f:numero)  
+  comenzar 
+    repetir 4 
+      repetir tamaño
+        juntarf(f)
+        mover 
+      derecha 
+  fin 
+  
+  proceso dartamaño
+  variables 
+    t,c:numero 
+  comenzar 
+    c:=0
+    repetir 3
+      c:=c+1
+      Random(t,1,6)
+      si(c=1)
+        EnviarMensaje(t,r1)
+      sino 
+        si(c=2)
+          EnviarMensaje(t,r2)
+        sino 
+          EnviarMensaje(t,r3)
+  fin
+  
+  proceso irabuscar(E aux:numero)
+  variables 
+    avini,caini:numero 
+  comenzar 
+    avini:=PosAv
+    caini:=PosCa
+    BloquearEsquina(50,50)    
+    Pos(50,50)
+    mientras(aux>0)&HayFlorEnLaEsquina
+      tomarFlor
+      aux:=aux-1
+    Pos(avini,caini)
+    LiberarEsquina(50,50)
+  fin
+  
+  proceso depositar
+  variables 
+    avini,caini:numero 
+  comenzar 
+    avini:=PosAv
+    caini:=PosCa
+    mientras (HayFlorEnLaBolsa)
+      BloquearEsquina(50,50)    
+      Pos(50,50)
+      depositarFlor
+      Pos(avini,caini)
+      LiberarEsquina(50,50)
+  fin                                              
+areas
+  arear1: AreaPC(1,1,7,23)
+  arear2: AreaPC(10,1,17,23)
+  arear3: AreaPC(20,1,27,23)
+  areajefe: AreaP(100,100,100,100)
+  esquina: AreaC(50,50,50,50)
+robots 
+  robot geometrico
+  variables 
+    f,ft,t,id:numero
+  comenzar 
+    RecibirMensaje(id,rjefe)
+    f:=0
+    ft:=0
+    RecibirMensaje(t,rjefe)
+    repetir 3
+      cuadrado(t,f)
+      ft:=ft + f
+      depositar
+      EnviarMensaje(id,rjefe)
+      EnviarMensaje(f,rjefe)
+      Pos(PosAv,PosCa+t+1)
+      f:=0   
+  fin 
+  
+  
+  robot jefe
+  variables 
+    idmax,id,f,c1,c2,c3:numero
+    listo:boolean
+  comenzar 
+    idmax:=0
+    c1:=0
+    c2:=0
+    c3:=0
+    identificar
+    dartamaño
+    repetir 9
+      RecibirMensaje(id, *)
+      si(id = 1)
+        RecibirMensaje(f, r1)
+        si(f<>0)
+          irabuscar(f)
+          c1:=c1 + f
+      sino
+        si(id = 2)
+          RecibirMensaje(f, r2)
+          si(f<>0)
+            irabuscar(f)
+            c2:=c2 + f
+        sino
+          RecibirMensaje(f, r3)
+          si(f<>0)
+            irabuscar(f)
+            c3:=c3 + f
+    recibirycalcular(c1,c2,c3,idmax)
+    Informar('ROBOT GANADOR',idmax)
+  fin 
+  
+variables 
+  r1,r2,r3:geometrico
+  rjefe:jefe
+comenzar 
+  AsignarArea(r1,arear1)
+  AsignarArea(r2,arear2)
+  AsignarArea(r3,arear3)
+  AsignarArea(r1,esquina)
+  AsignarArea(r2,esquina)
+  AsignarArea(r3,esquina)
+  AsignarArea(rjefe,esquina)
+  AsignarArea(rjefe,areajefe)
+  Iniciar(r1,1,1)
+  Iniciar(r2,10,1)
+  Iniciar(r3,20,1) 
+  Iniciar(rjefe,100,100)
+fin                              

@@ -1,0 +1,86 @@
+programa ejercicio3b 
+procesos 
+  proceso juntarp(ES p:numero;ES N:numero;E id:numero)
+  variables 
+    N:numero
+  comenzar 
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel 
+      p:=p+1
+      si(p=N)
+        avisar(id)
+        p:=0
+        Random(N,1,5)       
+  fin 
+  
+  proceso identificar
+  comenzar
+    EnviarMensaje(1, r1)
+    EnviarMensaje(2, r2)
+    EnviarMensaje(3, r3)
+  fin
+    
+  proceso recorrer(E id:numero)
+  variables 
+    p,N:numero
+  comenzar 
+    Random(N,1,5)
+    p:=0
+    mientras(PosCa<100)
+      juntarp(p,N,id)
+      mover 
+    juntarp(p,N,id)
+  fin
+  
+  proceso avisar(E id:numero)
+  variables 
+    listo:boolean
+  comenzar 
+    si(id=1)
+      EnviarMensaje(V,r2)
+      EnviarMensaje(V,r3)
+      RecibirMensaje(listo,r2)
+      RecibirMensaje(listo,r3)
+    sino 
+      si(id=2)  
+        EnviarMensaje(V,r1)
+        EnviarMensaje(V,r3)
+        RecibirMensaje(listo,r1)
+        RecibirMensaje(listo,r3)    
+      sino 
+        EnviarMensaje(V,r1)
+        EnviarMensaje(V,r2)
+        RecibirMensaje(listo,r1)
+        RecibirMensaje(listo,r2)
+  fin 
+  
+areas
+  area: AreaP(1,1,100,100)
+robots 
+  robot corredor
+  variables 
+    id:numero
+  comenzar 
+    RecibirMensaje(id,rjefe)
+    recorrer(id)
+    Informar('Termine',id)
+  fin 
+  
+  robot jefe 
+  comenzar
+    identificar 
+  fin 
+variables 
+  r1,r2,r3:corredor
+  rjefe:jefe
+comenzar 
+  AsignarArea(r1,area)    
+  AsignarArea(r2,area)
+  AsignarArea(r3,area)
+  AsignarArea(rjefe,area)
+  Iniciar(r1,1,1)
+  Iniciar(r2,2,1)
+  Iniciar(r3,3,1)
+  Iniciar(rjefe,4,1)
+fin  
+                        

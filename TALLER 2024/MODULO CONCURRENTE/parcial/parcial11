@@ -15,7 +15,7 @@ procesos
   fin 
   
   
-  proceso recibirycalcular(E c1:numero;E c2:numero;E c3:numero;ES idmax:numero)
+  proceso calcular(E c1:numero;E c2:numero;E c3:numero;ES idmax:numero)
   comenzar 
     si((c1>=c2)&(c1>=c3))
       idmax:=1
@@ -26,6 +26,28 @@ procesos
         idmax:= 3         
   fin
   
+  proceso recibircantidad(ES c1:numero;ES c2:numero;ES c3:numero)
+  variables
+    id,f:numero
+  comenzar
+    RecibirMensaje(id, *)
+    si(id = 1)
+      RecibirMensaje(f, r1)
+      si(f<>0)
+        irabuscar(f)
+        c1:=c1 + f
+    sino
+      si(id = 2)
+        RecibirMensaje(f, r2)
+        si(f<>0)
+          irabuscar(f)
+          c2:=c2 + f
+      sino
+        RecibirMensaje(f, r3)
+        si(f<>0)
+          irabuscar(f)
+          c3:=c3 + f
+  fin
   proceso cuadrado(E tamaño:numero;ES f:numero)  
   comenzar 
     repetir 4 
@@ -108,7 +130,7 @@ robots
   
   robot jefe
   variables 
-    idmax,id,f,c1,c2,c3:numero
+    idmax,c1,c2,c3:numero
     listo:boolean
   comenzar 
     idmax:=0
@@ -118,24 +140,8 @@ robots
     identificar
     dartamaño
     repetir 9
-      RecibirMensaje(id, *)
-      si(id = 1)
-        RecibirMensaje(f, r1)
-        si(f<>0)
-          irabuscar(f)
-          c1:=c1 + f
-      sino
-        si(id = 2)
-          RecibirMensaje(f, r2)
-          si(f<>0)
-            irabuscar(f)
-            c2:=c2 + f
-        sino
-          RecibirMensaje(f, r3)
-          si(f<>0)
-            irabuscar(f)
-            c3:=c3 + f
-    recibirycalcular(c1,c2,c3,idmax)
+      recibircantidad(c1,c2,c3)
+    calcular(c1,c2,c3,idmax)
     Informar('ROBOT GANADOR',idmax)
   fin 
   
